@@ -1932,54 +1932,6 @@ diff -ur a/packages/inputmethods/LatinIME/java-overridable/src/com/android/input
      public static final String JNI_LIB_NAME = "jni_latinime";
 -    public static final String JNI_LIB_NAME2 = "jni_latinimegoogle";
  }
-diff -ur a/packages/services/Telephony/res/values/strings.xml b/packages/services/Telephony/res/values/strings.xml
---- a/packages/services/Telephony/res/values/strings.xml	2016-05-08 03:44:19.608995999 +0000
-+++ b/packages/services/Telephony/res/values/strings.xml	2016-05-08 03:34:25.232995999 +0000
-@@ -633,12 +633,14 @@
-     </string-array>
- 
-     <string-array name="enabled_networks_except_lte_choices" translatable="false">
--        <item>@string/network_3G</item>
--        <item>@string/network_2G</item>
-+        <item>@string/preferred_network_mode_wcdma_only_choice</item>
-+        <item>@string/preferred_network_mode_gsm_only_choice</item>
-+        <item>@string/preferred_network_mode_gsm_wcdma_preferred_choice</item>
-     </string-array>
-     <string-array name="enabled_networks_except_lte_values" translatable="false">
--        <item>"0"</item>
-+        <item>"2"</item>
-         <item>"1"</item>
-+        <item>"0"</item>
-     </string-array>
- 
-     <string-array name="enabled_networks_except_gsm_lte_choices" translatable="false">
-diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
---- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2016-05-08 03:44:19.632995999 +0000
-+++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2016-05-08 03:34:25.232995999 +0000
-@@ -1127,7 +1127,7 @@
-             case Phone.NT_MODE_WCDMA_ONLY:
-                 mButtonEnabledNetworks.setValue(
-                         Integer.toString(Phone.NT_MODE_WCDMA_ONLY));
--                mButtonEnabledNetworks.setSummary(R.string.network_wcdma_only);
-+                mButtonEnabledNetworks.setSummary(R.string.preferred_network_mode_wcdma_only_choice);
-                 break;
-             case Phone.NT_MODE_GSM_UMTS:
-                 mButtonEnabledNetworks.setValue(
-@@ -1137,12 +1137,12 @@
-             case Phone.NT_MODE_WCDMA_PREF:
-                 mButtonEnabledNetworks.setValue(
-                         Integer.toString(Phone.NT_MODE_WCDMA_PREF));
--                mButtonEnabledNetworks.setSummary(R.string.network_wcdma_pref);
-+                mButtonEnabledNetworks.setSummary(R.string.preferred_network_mode_gsm_wcdma_preferred_choice);
-                 break;
-             case Phone.NT_MODE_GSM_ONLY:
-                 mButtonEnabledNetworks.setValue(
-                         Integer.toString(Phone.NT_MODE_GSM_ONLY));
--                mButtonEnabledNetworks.setSummary(R.string.network_gsm_only);
-+                mButtonEnabledNetworks.setSummary(R.string.preferred_network_mode_gsm_only_choice);
-                 break;
-             case Phone.NT_MODE_LTE_GSM_WCDMA:
-                 if (isWorldMode()) {
 diff -ur a/system/core/include/utils/VectorImpl.h b/system/core/include/utils/VectorImpl.h
 --- a/system/core/include/utils/VectorImpl.h	2016-05-08 03:45:31.888995999 +0000
 +++ b/system/core/include/utils/VectorImpl.h	2016-05-08 03:34:25.232995999 +0000
@@ -2203,3 +2155,49 @@ diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl
  /*****************************************************************************/
  
  }; // namespace android
+diff -ur a/external/tinyalsa/include/tinyalsa/asoundlib.h b/external/tinyalsa/include/tinyalsa/asoundlib.h
+--- a/external/tinyalsa/include/tinyalsa/asoundlib.h	2016-05-25 10:22:34.596000000 +0000
++++ b/external/tinyalsa/include/tinyalsa/asoundlib.h	2016-05-25 10:23:13.476000000 +0000
+@@ -243,6 +243,7 @@
+ int pcm_prepare(struct pcm *pcm);
+ /* Start and stop a PCM channel that doesn't transfer data */
+ int pcm_start(struct pcm *pcm);
++int pcm_drain(struct pcm *pcm);
+ int pcm_stop(struct pcm *pcm);
+ 
+ /* ioctl function for PCM driver */
+diff -ur a/external/tinyalsa/pcm.c b/external/tinyalsa/pcm.c
+--- a/external/tinyalsa/pcm.c	2016-05-25 10:22:34.596000000 +0000
++++ b/external/tinyalsa/pcm.c	2016-05-25 10:23:13.476000000 +0000
+@@ -1031,6 +1031,14 @@
+     return 0;
+ }
+ 
++int pcm_drain(struct pcm *pcm)
++{
++    if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DRAIN) < 0)
++        return oops(pcm, errno, "drain failed");
++
++    return 0;
++}
++
+ int pcm_stop(struct pcm *pcm)
+ {
+     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_DROP) < 0)
+diff -ur a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp
+--- a/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-05-27 06:16:16.461305200 +0000
++++ b/frameworks/av/media/libstagefright/MediaBufferGroup.cpp    2016-02-27 08:15:52.000000000 +0000
+@@ -55,6 +55,13 @@
+     mLastBuffer = buffer;
+ }
+ 
++#ifdef ADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
++extern "C" status_t _ZN7android16MediaBufferGroup14acquire_bufferEPPNS_11MediaBufferE(
++    MediaBufferGroup* group, MediaBuffer **out) {
++    return group->acquire_buffer(out, false);
++}
++#endif
++
+ status_t MediaBufferGroup::acquire_buffer(
+         MediaBuffer **out, bool nonBlocking) {
+     Mutex::Autolock autoLock(mLock);
