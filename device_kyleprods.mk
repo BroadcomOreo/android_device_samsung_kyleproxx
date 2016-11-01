@@ -60,6 +60,11 @@ PRODUCT_PACKAGES += \
     power.hawaii \
     libstagefrighthw
 
+# Media
+PRODUCT_PROPERTY_OVERRIDES += \
+    media.stagefright.legacyencoder=true \
+    media.stagefright.less-secure=true
+
 # IPv6 tethering
 PRODUCT_PACKAGES += \
     ebtables \
