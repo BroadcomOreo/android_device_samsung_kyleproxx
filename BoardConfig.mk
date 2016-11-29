@@ -126,6 +126,9 @@ BOARD_GLOBAL_CFLAGS                         += -DDISABLE_ASHMEM_TRACKING
 # Some of our vendor libs have text relocations
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS      := true
 
+# Bionic (previously known as dlmalloc)
+MALLOC_SVELTE                               := true
+
 # Recovery
 # Compile with BUILD_TWRP=true when build TWRP recovery
 ifeq ($(BUILD_TWRP),true)
