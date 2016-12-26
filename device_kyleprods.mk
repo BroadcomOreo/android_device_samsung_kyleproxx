@@ -125,7 +125,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.ril_class=SamsungBCMRIL \
     persist.radio.multisim.config=dsds \
     ro.multisim.simslotcount=2 \
-    cm.updater.uri=http://ota.sandpox.org/api \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
     ro.telephony.call_ring=0
@@ -153,10 +152,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.bg_apps_limit=12 \
     config.disable_atlas=true
-
-# Use Awesomeplayer
-PRODUCT_PROPERTY_OVERRIDES += \
-    persist.sys.media.use-awesome=true
 
 # Dalvik heap config
 include frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk
