@@ -85,7 +85,7 @@ PRODUCT_PACKAGES += \
 # Widevine
 PRODUCT_PACKAGES += \
     libshim_wvm
-    
+
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.ksm.default=1
@@ -132,6 +132,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.multisim.simslotcount=2 \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
+    ro.sys.sdcardfs=true \
     ro.telephony.call_ring=0
 
 # Enable Google-specific location features,
