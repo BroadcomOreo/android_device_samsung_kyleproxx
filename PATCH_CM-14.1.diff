@@ -1,6 +1,6 @@
 diff -ur a/external/icu/icu4c/source/common/ucnv.c b/external/icu/icu4c/source/common/ucnv.c
---- a/external/icu/icu4c/source/common/ucnv.c	2017-04-15 05:54:01.574978563 +0000
-+++ b/external/icu/icu4c/source/common/ucnv.c	2017-04-15 06:00:52.384171401 +0000
+--- a/external/icu/icu4c/source/common/ucnv.c	2017-05-10 17:12:45.174739233 +0000
++++ b/external/icu/icu4c/source/common/ucnv.c	2017-05-10 17:25:08.102371184 +0000
 @@ -2904,6 +2904,75 @@
              return FALSE;
      }
@@ -78,8 +78,8 @@ diff -ur a/external/icu/icu4c/source/common/ucnv.c b/external/icu/icu4c/source/c
  
  /*
 diff -ur a/frameworks/av/include/media/stagefright/ColorConverter.h b/frameworks/av/include/media/stagefright/ColorConverter.h
---- a/frameworks/av/include/media/stagefright/ColorConverter.h	2017-04-15 05:54:03.774984344 +0000
-+++ b/frameworks/av/include/media/stagefright/ColorConverter.h	2017-04-15 06:00:52.384171401 +0000
+--- a/frameworks/av/include/media/stagefright/ColorConverter.h	2017-05-10 17:12:52.382776888 +0000
++++ b/frameworks/av/include/media/stagefright/ColorConverter.h	2017-05-10 17:25:08.102371184 +0000
 @@ -67,6 +67,9 @@
      status_t convertCbYCrY(
              const BitmapParams &src, const BitmapParams &dst);
@@ -91,8 +91,8 @@ diff -ur a/frameworks/av/include/media/stagefright/ColorConverter.h b/frameworks
              const BitmapParams &src, const BitmapParams &dst);
  
 diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/libstagefright/ACodec.cpp
---- a/frameworks/av/media/libstagefright/ACodec.cpp	2017-04-15 05:54:03.778984355 +0000
-+++ b/frameworks/av/media/libstagefright/ACodec.cpp	2017-04-15 06:00:52.388171414 +0000
+--- a/frameworks/av/media/libstagefright/ACodec.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/ACodec.cpp	2017-05-10 17:25:08.110371205 +0000
 @@ -821,11 +821,7 @@
  
      status_t err;
@@ -325,8 +325,8 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
                  ALOGW("[%s] stopping checking formats after %u: %s(%x)",
                          name.c_str(), index,
 diff -ur a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
---- a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-04-15 05:54:03.778984355 +0000
-+++ b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-04-15 06:00:52.392171426 +0000
+--- a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-05-10 17:25:08.114371215 +0000
 @@ -48,6 +48,7 @@
      switch (mSrcFormat) {
          case OMX_COLOR_FormatYUV420Planar:
@@ -426,8 +426,8 @@ diff -ur a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
 +}  // namespace android
 \ No newline at end of file
 diff -ur a/frameworks/av/media/libstagefright/MPEG4Writer.cpp b/frameworks/av/media/libstagefright/MPEG4Writer.cpp
---- a/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-04-15 05:54:03.778984355 +0000
-+++ b/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-04-15 06:00:52.392171426 +0000
+--- a/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-05-10 17:25:08.114371215 +0000
 @@ -2547,18 +2547,10 @@
          if (mResumed) {
              int64_t durExcludingEarlierPausesUs = timestampUs - previousPausedDurationUs;
@@ -511,8 +511,8 @@ diff -ur a/frameworks/av/media/libstagefright/MPEG4Writer.cpp b/frameworks/av/me
  
      mOwner->trackProgressStatus(mTrackId, -1, err);
 diff -ur a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp
---- a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-04-15 05:54:03.778984355 +0000
-+++ b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-04-15 06:00:52.396171439 +0000
+--- a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-05-10 17:12:52.410777035 +0000
++++ b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-05-10 17:25:08.114371215 +0000
 @@ -380,6 +380,7 @@
              }
          } else if (type == kMetadataBufferTypeANWBuffer
@@ -530,8 +530,8 @@ diff -ur a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp b/fram
      }
  
 diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/services/audioflinger/Threads.cpp
---- a/frameworks/av/services/audioflinger/Threads.cpp	2017-04-15 05:54:03.782984365 +0000
-+++ b/frameworks/av/services/audioflinger/Threads.cpp	2017-04-15 06:00:52.396171439 +0000
+--- a/frameworks/av/services/audioflinger/Threads.cpp	2017-05-10 17:12:52.426777118 +0000
++++ b/frameworks/av/services/audioflinger/Threads.cpp	2017-05-10 17:25:08.122371236 +0000
 @@ -6468,6 +6468,7 @@
          mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER] += framesRead;
          mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER] = systemTime();
@@ -549,8 +549,8 @@ diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/servi
          // ALOGD("%s", mTimestamp.toString().c_str());
  
 diff -ur a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
---- a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-04-15 05:54:03.982984891 +0000
-+++ b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-04-15 06:00:52.444171587 +0000
+--- a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-05-10 17:12:55.462792969 +0000
++++ b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-05-10 17:25:08.122371236 +0000
 @@ -196,7 +196,7 @@
      private static final int HALT_MODE_REBOOT = 1;
      private static final int HALT_MODE_REBOOT_SAFE_MODE = 2;
@@ -589,8 +589,8 @@ diff -ur a/frameworks/base/services/core/java/com/android/server/power/PowerMana
                              } else {
                                  if (!mProximityPositive) {
 diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
---- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-04-15 05:54:03.982984891 +0000
-+++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-04-15 06:00:52.444171587 +0000
+--- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:12:55.470793011 +0000
++++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:25:08.126371247 +0000
 @@ -3744,49 +3744,19 @@
       * @hide
       */
@@ -677,8 +677,8 @@ diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.jav
  
      /** @hide */
 diff -ur a/frameworks/native/libs/binder/Parcel.cpp b/frameworks/native/libs/binder/Parcel.cpp
---- a/frameworks/native/libs/binder/Parcel.cpp	2017-04-15 05:54:04.146985323 +0000
-+++ b/frameworks/native/libs/binder/Parcel.cpp	2017-04-15 06:00:52.448171600 +0000
+--- a/frameworks/native/libs/binder/Parcel.cpp	2017-05-10 17:12:55.854795015 +0000
++++ b/frameworks/native/libs/binder/Parcel.cpp	2017-05-10 17:25:08.126371247 +0000
 @@ -1082,6 +1082,12 @@
      return writeString16(str.string(), str.size());
  }
@@ -693,8 +693,8 @@ diff -ur a/frameworks/native/libs/binder/Parcel.cpp b/frameworks/native/libs/bin
  {
      if (str == NULL) return writeInt32(-1);
 diff -ur a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp
---- a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-04-15 05:54:04.150985333 +0000
-+++ b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-04-15 06:00:52.448171600 +0000
+--- a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-05-10 17:12:55.854795015 +0000
++++ b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-05-10 17:25:08.194371428 +0000
 @@ -3727,6 +3727,10 @@
          bool isLocalScreenshot, bool useReadPixels)
  {
@@ -707,8 +707,8 @@ diff -ur a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp b/f
      // get screen geometry
      uint32_t hw_w = hw->getWidth();
 diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java
---- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-04-15 05:54:04.250985597 +0000
-+++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-04-15 06:00:52.452171612 +0000
+--- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-05-10 17:12:56.242797041 +0000
++++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-05-10 17:25:08.194371428 +0000
 @@ -239,6 +239,7 @@
      private boolean mDnsCheckDisabled;
      public DcTracker mDcTracker;
@@ -751,8 +751,8 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phon
          pw.println(" mCallRingDelay=" + mCallRingDelay);
          pw.println(" mIsVoiceCapable=" + mIsVoiceCapable);
 diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
---- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-04-15 05:54:04.254985607 +0000
-+++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-04-15 06:00:52.456171625 +0000
+--- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-05-10 17:12:56.254797104 +0000
++++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-05-10 17:25:08.194371428 +0000
 @@ -327,7 +327,7 @@
      static final int RESPONSE_SOLICITED_ACK_EXP = 3;
      static final int RESPONSE_UNSOLICITED_ACK_EXP = 4;
@@ -763,8 +763,8 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.
      static final int SOCKET_OPEN_RETRY_MILLIS = 4 * 1000;
  
 diff -ur a/hardware/broadcom/libbt/src/userial_vendor.c b/hardware/broadcom/libbt/src/userial_vendor.c
---- a/hardware/broadcom/libbt/src/userial_vendor.c	2017-04-15 05:54:04.342985838 +0000
-+++ b/hardware/broadcom/libbt/src/userial_vendor.c	2017-04-15 06:00:52.456171625 +0000
+--- a/hardware/broadcom/libbt/src/userial_vendor.c	2017-05-10 17:12:56.686799359 +0000
++++ b/hardware/broadcom/libbt/src/userial_vendor.c	2017-05-10 17:25:08.194371428 +0000
 @@ -196,6 +196,9 @@
      uint8_t data_bits;
      uint16_t parity;
@@ -786,8 +786,8 @@ diff -ur a/hardware/broadcom/libbt/src/userial_vendor.c b/hardware/broadcom/libb
  #endif
  
 diff -ur a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java
---- a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-04-15 05:54:05.290988333 +0000
-+++ b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-04-15 06:00:52.456171625 +0000
+--- a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-05-10 17:13:01.914826638 +0000
++++ b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-05-10 17:25:08.194371428 +0000
 @@ -262,7 +262,6 @@
          // Only visible on devices that does not have a navigation bar already,
          // and don't even try unless the existing keys can be disabled
@@ -806,9 +806,19 @@ diff -ur a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSetting
  
          if (hasPowerKey) {
              if (!TelephonyUtils.isVoiceCapable(getActivity())) {
+diff -ur a/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java b/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java
+--- a/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java	2017-04-14 15:25:57.169786285 +0000
++++ b/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java	2017-05-10 17:26:50.026663297 +0000
+@@ -22,5 +22,5 @@
+     }
+ 
+     public static final String JNI_LIB_NAME = "jni_latinime";
+-    public static final String JNI_LIB_NAME2 = "jni_latinimegoogle";
++    public static final String JNI_LIB_NAME2 = "jni_unbundled_latinimegoogle";
+ }
 diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/services/Telephony/res/values/cm_strings.xml
---- a/packages/services/Telephony/res/values/cm_strings.xml	2017-04-15 05:54:05.934990029 +0000
-+++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-04-15 06:00:52.456171625 +0000
+--- a/packages/services/Telephony/res/values/cm_strings.xml	2017-05-10 17:13:05.478845225 +0000
++++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-05-10 17:25:08.194371428 +0000
 @@ -51,6 +51,20 @@
      <string name="call_notif_callconnectedect">Call connected through explicit call transfer</string>
  
@@ -831,8 +841,8 @@ diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/serv
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_cdma_evdo_choice">TD-SCDMA/GSM/WCDMA/CDMA/EvDo</string>
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_lte_choice">TD-SCDMA/GSM/WCDMA/LTE</string>
 diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
---- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-04-15 05:54:05.934990029 +0000
-+++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-04-15 06:00:52.456171625 +0000
+--- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-05-10 17:13:05.482845246 +0000
++++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-05-10 17:25:08.198371439 +0000
 @@ -830,6 +830,12 @@
                  case Phone.NT_MODE_LTE_TDSCDMA_GSM_WCDMA:
                  case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
@@ -970,8 +980,8 @@ diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettin
              case Phone.NT_MODE_TDSCDMA_ONLY:
                  mButtonEnabledNetworks.setValue(
 diff -ur a/system/core/include/utils/RefBase.h b/system/core/include/utils/RefBase.h
---- a/system/core/include/utils/RefBase.h	2017-04-15 05:54:07.146993222 +0000
-+++ b/system/core/include/utils/RefBase.h	2017-04-15 06:00:52.456171625 +0000
+--- a/system/core/include/utils/RefBase.h	2017-05-10 17:13:09.470866037 +0000
++++ b/system/core/include/utils/RefBase.h	2017-05-10 17:25:08.198371439 +0000
 @@ -53,6 +53,15 @@
  
  // ---------------------------------------------------------------------------
@@ -989,8 +999,8 @@ diff -ur a/system/core/include/utils/RefBase.h b/system/core/include/utils/RefBa
  protected:
      // destructor is purposedly not virtual so we avoid code overhead from
 diff -ur a/system/core/include/utils/VectorImpl.h b/system/core/include/utils/VectorImpl.h
---- a/system/core/include/utils/VectorImpl.h	2017-04-15 05:54:07.146993222 +0000
-+++ b/system/core/include/utils/VectorImpl.h	2017-04-15 06:00:52.456171625 +0000
+--- a/system/core/include/utils/VectorImpl.h	2017-05-10 17:13:09.470866037 +0000
++++ b/system/core/include/utils/VectorImpl.h	2017-05-10 17:25:08.198371439 +0000
 @@ -105,7 +105,19 @@
      virtual void            do_splat(void* dest, const void* item, size_t num) const = 0;
      virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
@@ -1032,8 +1042,8 @@ diff -ur a/system/core/include/utils/VectorImpl.h b/system/core/include/utils/Ve
              ssize_t         _indexOrderOf(const void* item, size_t* order = 0) const;
  
 diff -ur a/system/core/init/init.cpp b/system/core/init/init.cpp
---- a/system/core/init/init.cpp	2017-04-15 05:54:07.146993222 +0000
-+++ b/system/core/init/init.cpp	2017-04-15 06:00:52.460171637 +0000
+--- a/system/core/init/init.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/init/init.cpp	2017-05-10 17:25:08.198371439 +0000
 @@ -443,7 +443,7 @@
  enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
  
@@ -1044,8 +1054,8 @@ diff -ur a/system/core/init/init.cpp b/system/core/init/init.cpp
      import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
          if (key == "androidboot.selinux" && value == "permissive") {
 diff -ur a/system/core/init/service.cpp b/system/core/init/service.cpp
---- a/system/core/init/service.cpp	2017-04-15 05:54:07.146993222 +0000
-+++ b/system/core/init/service.cpp	2017-04-15 06:00:52.460171637 +0000
+--- a/system/core/init/service.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/init/service.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -373,9 +373,9 @@
          }
          if (rc == 0 && scon == mycon) {
@@ -1060,8 +1070,8 @@ diff -ur a/system/core/init/service.cpp b/system/core/init/service.cpp
          free(mycon);
          free(fcon);
 diff -ur a/system/core/libnetutils/ifc_utils.c b/system/core/libnetutils/ifc_utils.c
---- a/system/core/libnetutils/ifc_utils.c	2017-04-15 05:54:07.150993233 +0000
-+++ b/system/core/libnetutils/ifc_utils.c	2017-04-15 06:00:52.460171637 +0000
+--- a/system/core/libnetutils/ifc_utils.c	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/libnetutils/ifc_utils.c	2017-05-10 17:25:08.202371450 +0000
 @@ -737,3 +737,18 @@
  
      return 0;
@@ -1082,8 +1092,8 @@ diff -ur a/system/core/libnetutils/ifc_utils.c b/system/core/libnetutils/ifc_uti
 +    return ret;
 +}
 diff -ur a/system/core/libutils/RefBase.cpp b/system/core/libutils/RefBase.cpp
---- a/system/core/libutils/RefBase.cpp	2017-04-15 05:54:07.150993233 +0000
-+++ b/system/core/libutils/RefBase.cpp	2017-04-15 06:00:52.460171637 +0000
+--- a/system/core/libutils/RefBase.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/libutils/RefBase.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -711,6 +711,13 @@
  
  // ---------------------------------------------------------------------------
@@ -1099,8 +1109,8 @@ diff -ur a/system/core/libutils/RefBase.cpp b/system/core/libutils/RefBase.cpp
  void RefBase::renameRefs(size_t n, const ReferenceRenamer& renamer) {
      for (size_t i=0 ; i<n ; i++) {
 diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl.cpp
---- a/system/core/libutils/VectorImpl.cpp	2017-04-15 05:54:07.150993233 +0000
-+++ b/system/core/libutils/VectorImpl.cpp	2017-04-15 06:00:52.460171637 +0000
+--- a/system/core/libutils/VectorImpl.cpp	2017-05-10 17:13:09.482866100 +0000
++++ b/system/core/libutils/VectorImpl.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -556,6 +556,17 @@
      do_move_backward(dest, from, num);
  }
