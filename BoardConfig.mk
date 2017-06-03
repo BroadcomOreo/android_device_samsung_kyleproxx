@@ -86,10 +86,6 @@ WIFI_BAND                                   := 802_11_ABG
 # LightHAL
 TARGET_PROVIDES_LIBLIGHT                    := true
 
-# PowerHAL
-TARGET_POWERHAL_VARIANT                     := hawaii
-TARGET_USES_CPU_BOOST_HINT                  := true
-
 # Resolution
 TARGET_SCREEN_HEIGHT                        := 800
 TARGET_SCREEN_WIDTH                         := 480
