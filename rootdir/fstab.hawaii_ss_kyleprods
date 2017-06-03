@@ -17,9 +17,3 @@
 
 # Vold-managed volumes ("block device" is actually a sysfs devpath)
 /devices/platform/sdhci.0/mmc_host/mmc2*            auto                vfat    defaults                                                                        voldmanaged=sdcard1:auto,encryptable=userdata
-
-# ZRAM
-/dev/block/zram0                                    none                swap    defaults                                                                        zramsize=402653184
-
-# SWAP
-/dev/block/platform/sdhci.1/by-name/HIDDEN          none                swap    defaults                                                                        defaults
