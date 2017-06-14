@@ -257,4 +257,7 @@
          format is UMTS|LTE|... -->
     <string translatable="false" name="config_radio_access_family">GSM|WCDMA</string>
 
+    <!-- Configuration to support SIM contact batch operation.-->
+    <bool name="config_sim_phonebook_batch_operation">false</bool>
+
 </resources>
