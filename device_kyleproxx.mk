@@ -28,7 +28,8 @@ PRODUCT_COPY_FILES += \
 
 # Releasetools script
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
+    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh \
+    device/samsung/kyleproxx/rootdir/set_variant.sh:system/etc/set_variant.sh
 
 # Insecure ADB
 ADDITIONAL_DEFAULT_PROPERTIES += \
