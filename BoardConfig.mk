@@ -39,6 +39,9 @@ TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
 KERNEL_TOOLCHAIN                            := $(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7/bin
 KERNEL_TOOLCHAIN_PREFIX                     := arm-eabi-
 
+# Releasetools
+TARGET_RELEASETOOLS_EXTENSIONS              := device/samsung/kyleproxx/releasetools
+
 # Extended filesystem support
 TARGET_KERNEL_HAVE_EXFAT                    := true
 TARGET_KERNEL_HAVE_NTFS                     := true

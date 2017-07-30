@@ -26,6 +26,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/configs/media_codecs.xml:system/etc/media_codecs.xml
 
+# Releasetools script
+PRODUCT_COPY_FILES += \
+    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
+
 # Insecure ADB
 ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.secure=0 \
