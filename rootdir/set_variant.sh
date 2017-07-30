@@ -3,7 +3,7 @@
 # grep the modem partition for baseband version and set it
 baseband=`strings /dev/block/mmcblk0p7 | grep "S7582" | head -1`
 
-if [ "$baseband" == "S7582"* ];
+if [[ $baseband == *"S7582"* ]];
 then
 	setprop ro.build.product kyleprods
 	setprop ro.product.model S7582
