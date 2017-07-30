@@ -547,47 +547,7 @@ diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/servi
 +#endif
          // Use this to track timestamp information
          // ALOGD("%s", mTimestamp.toString().c_str());
- 
-diff -ur a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
---- a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-05-10 17:12:55.462792969 +0000
-+++ b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-05-10 17:25:08.122371236 +0000
-@@ -196,7 +196,7 @@
-     private static final int HALT_MODE_REBOOT = 1;
-     private static final int HALT_MODE_REBOOT_SAFE_MODE = 2;
- 
--    private static final int BUTTON_ON_DURATION = 5 * 1000;
-+    private static final int BUTTON_ON_DURATION = 2 * 1000;
- 
-     private static final float PROXIMITY_NEAR_THRESHOLD = 5.0f;
- 
-@@ -274,6 +274,7 @@
-     // Timestamp of the last call to user activity.
-     private long mLastUserActivityTime;
-     private long mLastUserActivityTimeNoChangeLights;
-+    private long mLastButtonActivityTime;
- 
-     // Timestamp of last interactive power hint.
-     private long mLastInteractivePowerHintTime;
-@@ -1307,6 +1308,10 @@
-                     return true;
-                 }
-             } else {
-+                if (eventTime > mLastButtonActivityTime && (event & PowerManager.USER_ACTIVITY_EVENT_BUTTON) !=0) {
-+                    mLastButtonActivityTime = eventTime;
-+                    mDirty |= DIRTY_USER_ACTIVITY;
-+                }
-                 if (eventTime > mLastUserActivityTime) {
-                     mLastUserActivityTime = eventTime;
-                     mDirty |= DIRTY_USER_ACTIVITY;
-@@ -1867,7 +1872,7 @@
-                             mKeyboardLight.setBrightness(mKeyboardVisible ?
-                                     keyboardBrightness : 0);
-                             if (mButtonTimeout != 0
--                                    && now > mLastUserActivityTime + mButtonTimeout) {
-+                                    && now > mLastButtonActivityTime + mButtonTimeout) {
-                                 mButtonsLight.setBrightness(0);
-                             } else {
-                                 if (!mProximityPositive) {
+
 diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
 --- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:12:55.470793011 +0000
 +++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:25:08.126371247 +0000
