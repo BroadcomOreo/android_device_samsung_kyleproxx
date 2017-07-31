@@ -483,7 +483,7 @@ on post-fs
 
 # Set variants
     service set-variant /system/bin/sh /system/etc/set_variant.sh
-        class main
+        class late_start
         user root
         oneshot
 
