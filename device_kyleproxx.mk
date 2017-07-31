@@ -28,8 +28,7 @@ PRODUCT_COPY_FILES += \
 
 # Releasetools script
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh \
-    device/samsung/kyleproxx/rootdir/set_variant.sh:system/etc/set_variant.sh
+    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
 
 # Insecure ADB
 ADDITIONAL_DEFAULT_PROPERTIES += \
@@ -133,6 +132,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     mobiledata.interfaces=rmnet0 \
     ro.telephony.ril_class=SamsungBCMRIL \
+    persist.radio.multisim.config=none \
+    ro.multisim.simslotcount=1 \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
     ro.sys.sdcardfs=true \

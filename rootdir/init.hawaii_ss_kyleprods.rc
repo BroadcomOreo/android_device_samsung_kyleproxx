@@ -481,12 +481,6 @@ on post-fs
     chown radio system /efs
     chmod 0771 /efs
 
-# Set variants
-    service set-variant /system/bin/sh /system/etc/set_variant.sh
-        class late_start
-        user root
-        oneshot
-
 # Create filesystem if necessary
     service setup_fs /system/bin/setup_fs \
                 /dev/block/mmcblk0p15 \
