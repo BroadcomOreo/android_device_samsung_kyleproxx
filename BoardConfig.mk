@@ -124,6 +124,7 @@ BOARD_GLOBAL_CFLAGS                         += -DDISABLE_ASHMEM_TRACKING
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
+TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES  := true
 
 # Some of our vendor libs have text relocations
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS      := true
