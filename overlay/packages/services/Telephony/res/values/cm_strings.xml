@@ -20,9 +20,9 @@
     <string name="network_gsm_only" translatable="false">GSM only</string>
     <string name="network_wcdma_pref" translatable="false">WCDMA/GSM preferred</string>
     <string-array name="enabled_networks_except_lte_choices" translatable="false">
-    	 <item>@string/network_wcdma_only</item>
-    	 <item>@string/network_gsm_only</item>
-    	 <item>@string/network_wcdma_pref</item>
+        <item>@string/network_wcdma_only</item>
+        <item>@string/network_gsm_only</item>
+        <item>@string/network_wcdma_pref</item>
     </string-array>
     <string-array name="enabled_networks_except_lte_values" translatable="false">
         <item>"2"</item>
