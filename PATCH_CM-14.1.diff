@@ -777,8 +777,8 @@ diff -ur a/packages/inputmethods/LatinIME/java-overridable/src/com/android/input
 +    public static final String JNI_LIB_NAME2 = "jni_unbundled_latinimegoogle";
  }
 diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/services/Telephony/res/values/cm_strings.xml
---- a/packages/services/Telephony/res/values/cm_strings.xml	2017-05-10 17:13:05.478845225 +0000
-+++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-05-10 17:25:08.194371428 +0000
+--- a/packages/services/Telephony/res/values/cm_strings.xml	2017-08-08 12:43:17.154292991 +0000
++++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-08-08 12:44:10.310283706 +0000
 @@ -51,6 +51,20 @@
      <string name="call_notif_callconnectedect">Call connected through explicit call transfer</string>
  
@@ -801,22 +801,18 @@ diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/serv
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_cdma_evdo_choice">TD-SCDMA/GSM/WCDMA/CDMA/EvDo</string>
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_lte_choice">TD-SCDMA/GSM/WCDMA/LTE</string>
 diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
---- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-05-10 17:13:05.482845246 +0000
-+++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-05-10 17:25:08.198371439 +0000
-@@ -830,6 +830,12 @@
+--- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-08-08 12:43:17.170292989 +0000
++++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-08-08 13:06:33.993910416 +0000
+@@ -834,6 +834,8 @@
                  case Phone.NT_MODE_LTE_TDSCDMA_GSM_WCDMA:
                  case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
                  case Phone.NT_MODE_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
 +                case Phone.NT_MODE_WCDMA_ONLY:
 +                case Phone.NT_MODE_GSM_UMTS:
-+                case Phone.NT_MODE_EVDO_NO_CDMA:
-+                case Phone.NT_MODE_GLOBAL:
-+                case Phone.NT_MODE_LTE_ONLY:
-+                case Phone.NT_MODE_LTE_WCDMA:
                      // This is one of the modes we recognize
                      break;
                  default:
-@@ -1072,61 +1078,56 @@
+@@ -1076,28 +1078,24 @@
                  mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  break;
              case Phone.NT_MODE_WCDMA_ONLY:
@@ -859,86 +855,6 @@ diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettin
                  break;
              case Phone.NT_MODE_LTE_GSM_WCDMA:
                  if (isWorldMode()) {
--                    mButtonEnabledNetworks.setSummary(
--                            R.string.preferred_network_mode_lte_gsm_umts_summary);
-                     controlCdmaOptions(false);
-                     controlGsmOptions(true);
--                    break;
-                 }
--            case Phone.NT_MODE_LTE_ONLY:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_GSM_WCDMA));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_gsm_wcdma);
-+                break;
-             case Phone.NT_MODE_LTE_WCDMA:
--                if (!mIsGlobalCdma) {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_GSM_WCDMA));
--                    mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
--                            ? R.string.network_4G : R.string.network_lte);
--                } else {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_CDMA_EVDO_GSM_WCDMA));
--                    mButtonEnabledNetworks.setSummary(R.string.network_global);
--                }
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_WCDMA));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_cdma);
-+                break;
-+            case Phone.NT_MODE_LTE_ONLY:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_ONLY));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G_only : R.string.network_lte_only);
-                 break;
-             case Phone.NT_MODE_LTE_CDMA_AND_EVDO:
-                 if (isWorldMode()) {
--                    mButtonEnabledNetworks.setSummary(
--                            R.string.preferred_network_mode_lte_cdma_summary);
-                     controlCdmaOptions(true);
-                     controlGsmOptions(false);
--                } else {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_CDMA_AND_EVDO));
--                    mButtonEnabledNetworks.setSummary(R.string.network_lte);
-                 }
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_CDMA_AND_EVDO));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_cdma_and_evdo);
-                 break;
-             case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
-                 mButtonEnabledNetworks.setValue(
-@@ -1134,16 +1135,24 @@
-                 mButtonEnabledNetworks.setSummary(R.string.network_3G);
-                 break;
-             case Phone.NT_MODE_CDMA:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_CDMA));
-+                mButtonEnabledNetworks.setSummary(R.string.network_cdma);
-+                break;
-             case Phone.NT_MODE_EVDO_NO_CDMA:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_EVDO_NO_CDMA));
-+                mButtonEnabledNetworks.setSummary(R.string.network_evdo_no_cdma);
-+                break;
-             case Phone.NT_MODE_GLOBAL:
-                 mButtonEnabledNetworks.setValue(
--                        Integer.toString(Phone.NT_MODE_CDMA));
--                mButtonEnabledNetworks.setSummary(R.string.network_3G);
-+                        Integer.toString(Phone.NT_MODE_GLOBAL));
-+                mButtonEnabledNetworks.setSummary(R.string.network_3g_global);
-                 break;
-             case Phone.NT_MODE_CDMA_NO_EVDO:
-                 mButtonEnabledNetworks.setValue(
-                         Integer.toString(Phone.NT_MODE_CDMA_NO_EVDO));
--                mButtonEnabledNetworks.setSummary(R.string.network_1x);
-+                mButtonEnabledNetworks.setSummary(R.string.network_cdma_no_evdo);
-                 break;
-             case Phone.NT_MODE_TDSCDMA_ONLY:
-                 mButtonEnabledNetworks.setValue(
 diff -ur a/system/core/include/utils/RefBase.h b/system/core/include/utils/RefBase.h
 --- a/system/core/include/utils/RefBase.h	2017-05-10 17:13:09.470866037 +0000
 +++ b/system/core/include/utils/RefBase.h	2017-05-10 17:25:08.198371439 +0000
