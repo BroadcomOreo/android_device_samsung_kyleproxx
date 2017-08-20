@@ -1,8 +1,8 @@
-# LineageOS-13.0 Device tree for Samsung GT-S7582 (kyleprods)
+# LineageOS-14.1 Device tree for Samsung GT-S7582/GT-S7580 (kyleprods/kylepro)
 
 ### Specs (Physically inspected):
   - CPU: Cortex-A9 (Little endian, Dual Core)
-  - Codename: KYLEPRODS
+  - Codename: KYLEPRODS/KYLEPROXX
   - Display Panel: NT35510 (TFT)
   - Display Resolution: 480x800 (240dpi)
   - EMMC: 4GB (Usable ~2.2GB)
@@ -42,7 +42,7 @@ CPU variant     : 0x3
 CPU part        : 0xc09                                          
 CPU revision    : 0                                              
                                                                  
-Hardware        : hawaii_ss_kyleprods                              
+Hardware        : hawaii_ss_kyleprods/hawaii_ss_kylepro                              
 Revision        : 0000                                           
 Serial          : 0000000000000000                               
 ```
