@@ -21,13 +21,13 @@
 ### Notice:
   - Apply both *FIRST LOS 8.0.0 patches.diff* and *SECOND LOS 8.0.0 patches.diff* to root directory of LOS-15.0 source code before build
 
-    patch -p1 < device/samsung/kyleproxx/FIRST LOS\ 8.0.0\ patches.diff
+    patch -p1 < device/samsung/kyleprods/FIRST LOS\ 8.0.0\ patches.diff
     
-    patch -p1 < device/samsung/kyleproxx/SECOND LOS\ 8.0.0\ patches.diff
+    patch -p1 < device/samsung/kyleprods/SECOND LOS\ 8.0.0\ patches.diff
     
     
 ### Other resource:
-  - Kernel source: https://github.com/ishantvivek/android_kernel_samsung_kyleproxx
+  - Kernel source: https://github.com/BroadcomOreo/android_kernel_samsung_kyleproxx
   - Vendor blobs: https://github.com/ishantvivek/android_vendor_samsung_kyleproxx
 
 ### More Information:
