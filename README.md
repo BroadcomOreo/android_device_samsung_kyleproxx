@@ -1,4 +1,4 @@
-# LineageOS-14.1 Device tree for Samsung GT-S7582/GT-S7580 (kyleprods/kylepro)
+# LineageOS-15.0 Device tree for Samsung GT-S7582/GT-S7580 (kyleprods/kylepro)
 
 ### Specs (Physically inspected):
   - CPU: Cortex-A9 (Little endian, Dual Core)
