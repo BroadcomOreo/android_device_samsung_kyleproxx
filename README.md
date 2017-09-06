@@ -1,4 +1,4 @@
-# LineageOS 14.1  Device tree for Samsung GT-S7582 (kyleprods)
+# LineageOS 15.0  Device tree for Samsung GT-S7582 (kyleprods)
 
 ### Specs (Physically inspected):
   - CPU: Cortex-A9 (Little endian, Dual Core)
@@ -19,8 +19,13 @@
   - WIFI/Bluetooth/FM-Radio: BCM4330
 
 ### Notice:
-  - Apply patch *PATCH_CM-14.1.diff* to root directory of LOS-14.1 source code before build
+  - Apply both *FIRST LOS 8.0.0 patches.diff* and *SECOND LOS 8.0.0 patches.diff* to root directory of LOS-15.0 source code before build
 
+    patch -p1 < device/samsung/kyleproxx/FIRST LOS\ 8.0.0\ patches.diff
+    
+    patch -p1 < device/samsung/kyleproxx/SECOND LOS\ 8.0.0\ patches.diff
+    
+    
 ### Other resource:
   - Kernel source: https://github.com/ishantvivek/android_kernel_samsung_kyleproxx
   - Vendor blobs: https://github.com/ishantvivek/android_vendor_samsung_kyleproxx
