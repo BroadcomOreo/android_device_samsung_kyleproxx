@@ -1,3 +1,3 @@
-ifeq ($(TARGET_DEVICE),kyleproxx)
+ifeq ($(TARGET_DEVICE),kyleprods)
     include $(all-subdir-makefiles)
 endif

@@ -1,5 +1,5 @@
 #
-# KYLEPRODS (GT-S758x)
+# KYLEPRODS (GT-S7582)
 #
 
 persist.brcm.log=none
@@ -34,3 +34,8 @@ sf.metadata_use_plat_sw_codecs=1
 
 ro.ril.hsxpa=1
 ro.ril.gprsclass=10
+
+# BG Tuning
+ro.sys.fw.bg_apps_limit=8
+ro.config.low_ram=true
+persist.sys.force_highendgfx=true

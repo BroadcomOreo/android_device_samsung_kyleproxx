@@ -6,15 +6,16 @@ PRODUCT_LOCALES += hdpi
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
-DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleproxx/overlay
+DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleprods/overlay
 
 # Init files
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleprods:root/fstab.hawaii_ss_kyleprods \
-    device/samsung/kyleproxx/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
-    device/samsung/kyleproxx/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
-    device/samsung/kyleproxx/rootdir/init.log.rc:root/init.log.rc \
-    device/samsung/kyleproxx/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
+    device/samsung/kyleprods/rootdir/fstab.hawaii_ss_kyleprods:root/fstab.hawaii_ss_kyleprods \
+    device/samsung/kyleprods/rootdir/init.rc:root/init.rc \
+    device/samsung/kyleprods/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
+    device/samsung/kyleprods/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
+    device/samsung/kyleprods/rootdir/init.log.rc:root/init.log.rc \
+    device/samsung/kyleprods/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
 
 # Google's Software Decoder.
 PRODUCT_COPY_FILES += \
@@ -24,16 +25,12 @@ PRODUCT_COPY_FILES += \
 
 # Configs
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleproxx/configs/media_codecs.xml:system/etc/media_codecs.xml
-
-# Releasetools script
-PRODUCT_COPY_FILES += \
-    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
+    device/samsung/kyleprods/configs/media_codecs.xml:system/etc/media_codecs.xml
 
 # Insecure ADB
-ADDITIONAL_DEFAULT_PROPERTIES += \
-    ro.secure=0 \
-    ro.adb.secure=0 \
+#ADDITIONAL_DEFAULT_PROPERTIES += \
+#    ro.secure=0 \
+#    ro.adb.secure=0 \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -61,8 +58,14 @@ PRODUCT_PACKAGES += \
     audio.primary.default \
     libaudio-resampler \
     lights.hawaii \
+    android.hardware.light@2.0-impl \
     power.hawaii \
+    android.hardware.power@1.0-impl \
     libstagefrighthw
+
+# RenderScript HAL
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0-impl
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -89,7 +92,7 @@ PRODUCT_PACKAGES += \
 # Widevine
 PRODUCT_PACKAGES += \
     libshim_wvm
-
+    
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.ksm.default=1
@@ -104,7 +107,53 @@ PRODUCT_PACKAGES += \
     hostapd \
     libnetcmdiface \
     wpa_supplicant \
-    wpa_supplicant.conf
+    wpa_supplicant.conf \
+    android.hardware.wifi@1.0-service \
+    libcld80211 \
+    wificond 
+
+#hidl hals
+PRODUCT_PACKAGES += \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.broadcastradio@1.0-impl \
+    android.hardware.soundtrigger@2.0-impl
+
+PRODUCT_PACKAGES += \
+    libbt-vendor \
+    android.hardware.bluetooth@1.0-impl
+
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.memtrack@1.0-impl \
+    libgenlock \
+    rild_socket
+
+# Seccomp policy
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy
+
+# DRM
+PRODUCT_PACKAGES += \
+android.hardware.drm@1.0-impl
+
+# GNSS HAL
+PRODUCT_PACKAGES += \
+    android.hardware.gnss@1.0-impl
+
+# HIDL
+PRODUCT_COPY_FILES += \
+$(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
+
+# Gatekeeper HAL
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-impl
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -132,11 +181,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     mobiledata.interfaces=rmnet0 \
     ro.telephony.ril_class=SamsungBCMRIL \
-    persist.radio.multisim.config=none \
-    ro.multisim.simslotcount=1 \
+    persist.radio.multisim.config=dsds \
+    ro.multisim.simslotcount=2 \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
-    ro.sys.sdcardfs=true \
     ro.telephony.call_ring=0
 
 # Enable Google-specific location features,
@@ -146,7 +194,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.com.google.networklocation=1
 
 # Extended JNI checks:
-# The extended JNI checks will cause the system to run more slowly, but they can spot a variety of nasty bugs
+# The extended JNI checks will cause the system to run more slowly, but they can spot a variety of nasty bugs 
 # before they have a chance to cause problems.
 # Default=true for development builds, set by android buildsystem
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -158,21 +206,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.dex2oat_thread_count=2
 
-# Low-RAM configs
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.fw.bg_apps_limit=12 \
-    config.disable_atlas=true
-
 # Dalvik heap config
-include frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk
-
-# Texture config.
-include frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
+include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
 
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
-PRODUCT_NAME := full_kyleproxx
-PRODUCT_DEVICE := kyleproxx
-PRODUCT_MODEL := GT-S758x
+PRODUCT_NAME := full_kyleprods
+PRODUCT_DEVICE := kyleprods
+PRODUCT_MODEL := GT-S7582

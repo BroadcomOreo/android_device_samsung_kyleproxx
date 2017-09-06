@@ -15,11 +15,11 @@ ARCH_ARM_HAVE_VFP                           := true
 ARCH_ARM_HAVE_TLS_REGISTER                  := true
 ARCH_ARM_HAVE_NEON                          := true
 TARGET_BOOTLOADER_BOARD_NAME                := hawaii
-TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
-TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+#TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+#TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE                    := kyleprods,kylepro,S7582,S7580,GT-S7582,GT-S7580,hawaii
+TARGET_OTA_ASSERT_DEVICE                    := kyleprods,S7582,GT-S7582,hawaii
 
 # Kernel
 BOARD_MKBOOTIMG_ARGS                        := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
@@ -39,9 +39,6 @@ TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
 KERNEL_TOOLCHAIN                            := $(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7/bin
 KERNEL_TOOLCHAIN_PREFIX                     := arm-eabi-
 
-# Releasetools
-TARGET_RELEASETOOLS_EXTENSIONS              := device/samsung/kyleproxx/releasetools
-
 # Extended filesystem support
 TARGET_KERNEL_HAVE_EXFAT                    := true
 TARGET_KERNEL_HAVE_NTFS                     := true
@@ -53,9 +50,7 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE          := 10279424
 # //
 BOARD_SYSTEMIMAGE_PARTITION_SIZE            := 1200283648
 BOARD_SYSTEMIMAGE_JOURNAL_SIZE              := 0
-# Actual size is 2382364672
-# Reduced by 16384 to fix device encryption.
-BOARD_USERDATAIMAGE_PARTITION_SIZE          := 2382348288
+BOARD_USERDATAIMAGE_PARTITION_SIZE          := 2382364672
 BOARD_CACHEIMAGE_PARTITION_SIZE             := 209715200
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE           := ext4
 BOARD_FLASH_BLOCK_SIZE                      := 262144
@@ -63,8 +58,8 @@ BOARD_FLASH_BLOCK_SIZE                      := 262144
 # Bluetooth
 BOARD_HAVE_BLUETOOTH                        := true
 BOARD_HAVE_BLUETOOTH_BCM                    := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/kyleproxx/bluetooth
-BOARD_CUSTOM_BT_CONFIG                      := device/samsung/kyleproxx/bluetooth/libbt_vndcfg.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/kyleprods/bluetooth
+BOARD_CUSTOM_BT_CONFIG                      := device/samsung/kyleprods/bluetooth/libbt_vndcfg.txt
 
 # Connectivity - Wi-Fi
 BOARD_HAVE_SAMSUNG_WIFI                     := true
@@ -88,6 +83,7 @@ WIFI_BAND                                   := 802_11_ABG
 
 # LightHAL
 TARGET_PROVIDES_LIBLIGHT                    := true
+
 
 # Resolution
 TARGET_SCREEN_HEIGHT                        := 800
@@ -119,22 +115,24 @@ BOARD_CHARGER_ENABLE_SUSPEND                := true
 BOARD_HAL_STATIC_LIBRARIES                  := libhealthd.hawaii
 
 # RIL
-BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx/ril/
+BOARD_RIL_CLASS                             := ../../../device/samsung/kyleprods/ril/
 BOARD_GLOBAL_CFLAGS                         += -DDISABLE_ASHMEM_TRACKING
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
-TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES  := true
 
 # Some of our vendor libs have text relocations
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS      := true
 
+# Bionic (previously known as dlmalloc)
+MALLOC_SVELTE                               := true
+
 # Recovery
 # Compile with BUILD_TWRP=true when build TWRP recovery
 ifeq ($(BUILD_TWRP),true)
-    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/twrp.fstab.hawaii_ss_kyleprods
+    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleprods/rootdir/twrp.fstab.hawaii_ss_kyleprods
 else
-    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleprods
+    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleprods/rootdir/fstab.hawaii_ss_kyleprods
 endif
 TARGET_USE_CUSTOM_LUN_FILE_PATH             := /sys/class/android_usb/android0/f_mass_storage/lun/file
 TARGET_USERIMAGES_USE_EXT4                  := true
@@ -179,8 +177,8 @@ BOARD_MTP_DEVICE                            := /dev/mtp_usb
 BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 
 # GPS
-TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
+TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
 
 # SELinux
-BOARD_SEPOLICY_DIRS += \
-    device/samsung/kyleproxx/sepolicy
+#BOARD_SEPOLICY_DIRS += \
+#    device/samsung/kyleprods/sepolicy

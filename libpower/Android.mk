@@ -1,4 +1,5 @@
-# Copyright (C) 2017 The Android Open Source Project
+#
+# Copyright 2016 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +14,12 @@
 # limitations under the License.
 #
 
-def IncrementalOTA_InstallEnd(info):
-  ReplaceDeviceConfig(info)
+LOCAL_PATH:= $(call my-dir)
 
-def FullOTA_InstallEnd(info):
-  ReplaceDeviceConfig(info)
-
-def ReplaceDeviceConfig(info):
-  info.script.Mount("/system")
-  info.script.AppendExtra('ui_print("Replacing libs according to variant");')
-  info.script.AppendExtra('run_program("/sbin/sh", "/tmp/install/bin/check_variant.sh");')
-  info.script.Unmount("/system")
+include $(CLEAR_VARS)
+LOCAL_MODULE_RELATIVE_PATH := hw
+LOCAL_SRC_FILES := power.c
+LOCAL_SHARED_LIBRARIES := liblog libcutils
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := power.hawaii
+include $(BUILD_SHARED_LIBRARY)
