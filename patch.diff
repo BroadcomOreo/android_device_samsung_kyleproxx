@@ -1,0 +1,549 @@
+project build/make/
+diff --git a/core/main.mk b/core/main.mk
+index f51070b94..3b5f33f5a 100644
+--- a/core/main.mk
++++ b/core/main.mk
+@@ -172,7 +172,7 @@ $(info ************************************************************)
+ $(info You asked for an OpenJDK based build but your version is)
+ $(info $(java_version_str).)
+ $(info ************************************************************)
+-$(error stop)
++#$(error stop)
+ endif # java version is not OpenJdk
+ else # if requires_openjdk
+ ifneq ($(shell echo '$(java_version_str)' | grep -i openjdk),)
+
+project device/samsung/kyleprods/
+diff --git a/BoardConfig.mk b/BoardConfig.mk
+index d25c4a7..835b5bc 100644
+--- a/BoardConfig.mk
++++ b/BoardConfig.mk
+@@ -15,8 +15,8 @@ ARCH_ARM_HAVE_VFP                           := true
+ ARCH_ARM_HAVE_TLS_REGISTER                  := true
+ ARCH_ARM_HAVE_NEON                          := true
+ TARGET_BOOTLOADER_BOARD_NAME                := hawaii
+-TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+-TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
++#TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
++#TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+ 
+ # Assert
+ TARGET_OTA_ASSERT_DEVICE                    := kyleprods,S7582,GT-S7582,hawaii
+@@ -180,5 +180,5 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
+ TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
+ 
+ # SELinux
+-BOARD_SEPOLICY_DIRS += \
+-    device/samsung/kyleprods/sepolicy
++#BOARD_SEPOLICY_DIRS += \
++#    device/samsung/kyleprods/sepolicy
+diff --git a/device_kyleprods.mk b/device_kyleprods.mk
+index 4cf8958..1d6d945 100644
+--- a/device_kyleprods.mk
++++ b/device_kyleprods.mk
+@@ -28,9 +28,9 @@ PRODUCT_COPY_FILES += \
+     device/samsung/kyleprods/configs/media_codecs.xml:system/etc/media_codecs.xml
+ 
+ # Insecure ADB
+-ADDITIONAL_DEFAULT_PROPERTIES += \
+-    ro.secure=0 \
+-    ro.adb.secure=0 \
++#ADDITIONAL_DEFAULT_PROPERTIES += \
++#    ro.secure=0 \
++#    ro.adb.secure=0 \
+ 
+ # Filesystem management tools
+ PRODUCT_PACKAGES += \
+@@ -58,9 +58,15 @@ PRODUCT_PACKAGES += \
+     audio.primary.default \
+     libaudio-resampler \
+     lights.hawaii \
++    android.hardware.light@2.0-impl \
+     power.hawaii \
++    android.hardware.power@1.0-impl \
+     libstagefrighthw
+ 
++# RenderScript HAL
++PRODUCT_PACKAGES += \
++    android.hardware.renderscript@1.0-impl
++
+ # Media
+ PRODUCT_PROPERTY_OVERRIDES += \
+     media.stagefright.legacyencoder=true \
+@@ -101,7 +107,53 @@ PRODUCT_PACKAGES += \
+     hostapd \
+     libnetcmdiface \
+     wpa_supplicant \
+-    wpa_supplicant.conf
++    wpa_supplicant.conf \
++    android.hardware.wifi@1.0-service \
++    libcld80211 \
++    wificond 
++
++#hidl hals
++PRODUCT_PACKAGES += \
++    android.hardware.audio@2.0-impl \
++    android.hardware.audio.effect@2.0-impl \
++    android.hardware.broadcastradio@1.0-impl \
++    android.hardware.soundtrigger@2.0-impl
++
++PRODUCT_PACKAGES += \
++    libbt-vendor \
++    android.hardware.bluetooth@1.0-impl
++
++PRODUCT_PACKAGES += \
++    android.hardware.graphics.allocator@2.0-impl \
++    android.hardware.graphics.allocator@2.0-service \
++    android.hardware.graphics.composer@2.1-impl \
++    android.hardware.graphics.mapper@2.0-impl \
++    android.hardware.memtrack@1.0-impl \
++    libgenlock \
++    rild_socket
++
++# Seccomp policy
++PRODUCT_COPY_FILES += \
++    $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy
++
++# DRM
++PRODUCT_PACKAGES += \
++android.hardware.drm@1.0-impl
++
++# GNSS HAL
++PRODUCT_PACKAGES += \
++    android.hardware.gnss@1.0-impl
++
++# HIDL
++PRODUCT_COPY_FILES += \
++$(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
++
++# Gatekeeper HAL
++PRODUCT_PACKAGES += \
++    android.hardware.gatekeeper@1.0-impl
++# Keymaster
++PRODUCT_PACKAGES += \
++    android.hardware.keymaster@3.0-impl
+ 
+ # These are the hardware-specific features
+ PRODUCT_COPY_FILES += \
+@@ -157,9 +209,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
+ # Dalvik heap config
+ include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
+ 
+-# Texture config.
+-include frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
+-
+ $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
+ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+ 
+diff --git a/lineage.mk b/lineage.mk
+index ac9fac4..cdc03fa 100644
+--- a/lineage.mk
++++ b/lineage.mk
+@@ -1,5 +1,5 @@
+ # Inherit some common CM stuff.
+-$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
++$(call inherit-product, vendor/lineage/config/common_mini_phone.mk)
+ 
+ # Inherit device configuration
+ $(call inherit-product, device/samsung/kyleprods/device_kyleprods.mk)
+diff --git a/rootdir/init.hawaii_ss_kyleprods.rc b/rootdir/init.hawaii_ss_kyleprods.rc
+index 0ff47c0..5b13dc7 100644
+--- a/rootdir/init.hawaii_ss_kyleprods.rc
++++ b/rootdir/init.hawaii_ss_kyleprods.rc
+@@ -507,7 +507,7 @@ on post-fs
+         group system
+ 
+ # RILD
+-    service ril-daemon /system/bin/rild
++    service ril-daemon /system/vendor/bin/hw/rild
+         class main
+         socket rild stream 660 root radio
+         socket rild1 stream 660 root radio
+@@ -515,7 +515,7 @@ on post-fs
+         user root
+         group radio cache inet misc audio system sdcard_rw log sdcard_r
+ 
+-    service wpa_supplicant /system/bin/wpa_supplicant \
++    service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
+         -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+         -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+         -e/data/misc/wifi/entropy.bin \
+
+project external/icu/
+diff --git a/icu4c/source/common/ucnv.c b/icu4c/source/common/ucnv.c
+index 527f86f14..8bf7609a1 100644
+--- a/icu4c/source/common/ucnv.c
++++ b/icu4c/source/common/ucnv.c
+@@ -2906,6 +2906,75 @@ ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
+             return FALSE;
+     }
+ }
++U_CAPI void    U_EXPORT2 ucnv_setToUCallBack_48 (UConverter * converter,
++                            UConverterToUCallback newAction,
++                            const void* newContext,
++                            UConverterToUCallback *oldAction,
++                            const void** oldContext,
++                            UErrorCode * err) {
++  ucnv_setToUCallBack(converter, newAction, newContext,
++        oldAction, oldContext, err);
++}
++
++U_CAPI void  U_EXPORT2 ucnv_close_48 (UConverter * converter) {
++  ucnv_close (converter);
++}
++
++U_CAPI void  U_EXPORT2
++ucnv_setFromUCallBack_48 (UConverter * converter,
++                            UConverterFromUCallback newAction,
++                            const void* newContext,
++                            UConverterFromUCallback *oldAction,
++                            const void** oldContext,
++                            UErrorCode * err) {
++
++  ucnv_setFromUCallBack(converter, newAction, newContext, oldAction,
++        oldContext, err);
++}
++
++U_CAPI void U_EXPORT2
++ucnv_convertEx_48 (UConverter *targetCnv, UConverter *sourceCnv,
++               char **target, const char *targetLimit,
++               const char **source, const char *sourceLimit,
++               UChar *pivotStart, UChar **pivotSource,
++               UChar **pivotTarget, const UChar *pivotLimit,
++               UBool reset, UBool flush,
++               UErrorCode *pErrorCode) {
++  ucnv_convertEx(targetCnv, sourceCnv, target, targetLimit, source,
++        sourceLimit, pivotStart, pivotSource,
++        pivotTarget, pivotLimit, reset, flush,
++        pErrorCode);
++}
++
++U_CAPI UConverter* U_EXPORT2
++ucnv_open_48 (const char *name,
++                       UErrorCode * err) {
++  return ucnv_open(name, err);
++}
++
++U_STABLE void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP_48 (
++                  const void *context,
++                  UConverterFromUnicodeArgs *fromUArgs,
++                  const UChar* codeUnits,
++                  int32_t length,
++                  UChar32 codePoint,
++                  UConverterCallbackReason reason,
++                  UErrorCode * err) {
++  return UCNV_FROM_U_CALLBACK_STOP(context, fromUArgs, codeUnits,
++      length, codePoint, reason, err);
++}
++
++U_STABLE void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP_48 (
++                  const void *context,
++                  UConverterToUnicodeArgs *toUArgs,
++                  const char* codeUnits,
++                  int32_t length,
++                  UConverterCallbackReason reason,
++                  UErrorCode * err) {
++  return UCNV_TO_U_CALLBACK_STOP(context, toUArgs, codeUnits, length,
++      reason, err);
++}
++
+ #endif
+ 
+ /*
+
+project frameworks/base/
+diff --git a/telephony/java/android/telephony/TelephonyManager.java b/telephony/java/android/telephony/TelephonyManager.java
+index 6b921c75910..d636d326617 100644
+--- a/telephony/java/android/telephony/TelephonyManager.java
++++ b/telephony/java/android/telephony/TelephonyManager.java
+@@ -4128,48 +4128,19 @@ public class TelephonyManager {
+      * @hide
+      */
+     public static void setTelephonyProperty(int phoneId, String property, String value) {
+-        String propVal = "";
+-        String p[] = null;
+-        String prop = SystemProperties.get(property);
+-
+-        if (value == null) {
+-            value = "";
+-        }
+-
+-        if (prop != null) {
+-            p = prop.split(",");
+-        }
+-
+         if (!SubscriptionManager.isValidPhoneId(phoneId)) {
+             Rlog.d(TAG, "setTelephonyProperty: invalid phoneId=" + phoneId +
+-                    " property=" + property + " value: " + value + " prop=" + prop);
++                    " property=" + property + " value: " + value);
+             return;
+         }
+ 
+-        for (int i = 0; i < phoneId; i++) {
+-            String str = "";
+-            if ((p != null) && (i < p.length)) {
+-                str = p[i];
+-            }
+-            propVal = propVal + str + ",";
+-        }
+-
+-        propVal = propVal + value;
+-        if (p != null) {
+-            for (int i = phoneId + 1; i < p.length; i++) {
+-                propVal = propVal + "," + p[i];
+-            }
+-        }
+-
+-        if (propVal.length() > SystemProperties.PROP_VALUE_MAX) {
+-            Rlog.d(TAG, "setTelephonyProperty: property too long phoneId=" + phoneId +
+-                    " property=" + property + " value: " + value + " propVal=" + propVal);
+-            return;
++        if (phoneId > 0) {
++           property += "_" + phoneId;
+         }
+ 
+         Rlog.d(TAG, "setTelephonyProperty: success phoneId=" + phoneId +
+-                " property=" + property + " value: " + value + " propVal=" + propVal);
+-        SystemProperties.set(property, propVal);
++                " property=" + property + " value: " + value);
++        SystemProperties.set(property, value);
+     }
+ 
+     /**
+@@ -4266,15 +4237,21 @@ public class TelephonyManager {
+      * @hide
+      */
+     public static String getTelephonyProperty(int phoneId, String property, String defaultVal) {
+-        String propVal = null;
+-        String prop = SystemProperties.get(property);
+-        if ((prop != null) && (prop.length() > 0)) {
+-            String values[] = prop.split(",");
+-            if ((phoneId >= 0) && (phoneId < values.length) && (values[phoneId] != null)) {
+-                propVal = values[phoneId];
+-            }
++        if (!SubscriptionManager.isValidPhoneId(phoneId)) {
++            Rlog.d(TAG, "getTelephonyProperty: invalid phoneId=" + phoneId +
++                    " property=" + property);
++            return defaultVal;
++       }
++        if (phoneId > 0) {
++            property += "_" + phoneId;
+         }
+-        return propVal == null ? defaultVal : propVal;
++
++        String propVal = SystemProperties.get(property);
++
++        Rlog.d(TAG, "getTelephonyProperty: return propVal='" + propVal + "' phoneId=" + phoneId
++                + " property='" + property + "' defaultVal='" + defaultVal);
++
++        return propVal.isEmpty() ? defaultVal : propVal;
+     }
+ 
+     /** @hide */
+
+project frameworks/opt/telephony/
+diff --git a/src/java/com/android/internal/telephony/Phone.java b/src/java/com/android/internal/telephony/Phone.java
+index 30d1591e..f1843934 100644
+--- a/src/java/com/android/internal/telephony/Phone.java
++++ b/src/java/com/android/internal/telephony/Phone.java
+@@ -241,6 +241,7 @@ public abstract class Phone extends Handler implements PhoneInternalInterface {
+     /* Used for dispatching carrier action from carrier apps */
+     private CarrierActionAgent mCarrierActionAgent;
+     private boolean mDoesRilSendMultipleCallRing;
++    private boolean mDoesRilSendCallRing;
+     private int mCallRingContinueToken;
+     private int mCallRingDelay;
+     private boolean mIsVoiceCapable = true;
+@@ -489,6 +490,10 @@ public abstract class Phone extends Handler implements PhoneInternalInterface {
+         mDoesRilSendMultipleCallRing = SystemProperties.getBoolean(
+                 TelephonyProperties.PROPERTY_RIL_SENDS_MULTIPLE_CALL_RING, true);
+         Rlog.d(LOG_TAG, "mDoesRilSendMultipleCallRing=" + mDoesRilSendMultipleCallRing);
++        // Some RIL do not even send a single RIL_UNSOL_CALL_RING
++        mDoesRilSendCallRing = SystemProperties.getBoolean(
++                "ro.telephony.call_ring", true);
++        Rlog.d(LOG_TAG, "mDoesRilSendCallRing=" + mDoesRilSendCallRing);
+ 
+         mCallRingDelay = SystemProperties.getInt(
+                 TelephonyProperties.PROPERTY_CALL_RING_DELAY, 3000);
+@@ -2792,6 +2797,13 @@ public abstract class Phone extends Handler implements PhoneInternalInterface {
+     public void notifyNewRingingConnectionP(Connection cn) {
+         if (!mIsVoiceCapable)
+             return;
++        // Fake RIL_UNSOL_CALL_RING if the RIL doesn't send it.
++        if (!mDoesRilSendCallRing) {
++            int token = ++mCallRingContinueToken;
++            sendMessageDelayed(
++                    obtainMessage(EVENT_CALL_RING_CONTINUE, token, 0), mCallRingDelay);
++        }
++
+         AsyncResult ar = new AsyncResult(null, cn, null);
+         mNewRingingConnectionRegistrants.notifyRegistrants(ar);
+     }
+@@ -3486,6 +3498,7 @@ public abstract class Phone extends Handler implements PhoneInternalInterface {
+         pw.println(" mCi=" + mCi);
+         pw.println(" mDnsCheckDisabled=" + mDnsCheckDisabled);
+         pw.println(" mDcTracker=" + mDcTracker);
++        pw.println(" mDoesRilSendCallRing=" + mDoesRilSendCallRing);
+         pw.println(" mDoesRilSendMultipleCallRing=" + mDoesRilSendMultipleCallRing);
+         pw.println(" mCallRingContinueToken=" + mCallRingContinueToken);
+         pw.println(" mCallRingDelay=" + mCallRingDelay);
+
+project system/core/
+diff --git a/init/init.cpp b/init/init.cpp
+index bb6355ae3..2dfe87fea 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -541,7 +541,7 @@ static void selinux_init_all_handles(void)
+ enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
+ 
+ static selinux_enforcing_status selinux_status_from_cmdline() {
+-    selinux_enforcing_status status = SELINUX_ENFORCING;
++    selinux_enforcing_status status = SELINUX_PERMISSIVE;
+ 
+     import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
+         if (key == "androidboot.selinux" && value == "permissive") {
+diff --git a/libnetutils/ifc_utils.c b/libnetutils/ifc_utils.c
+index a098d596e..9f2b7943c 100644
+--- a/libnetutils/ifc_utils.c
++++ b/libnetutils/ifc_utils.c
+@@ -725,3 +725,18 @@ ifc_configure(const char *ifname,
+ 
+     return 0;
+ }
++// Required for Broadcom RILD
++int ifc_set_mtu(const char *name, int mtuSz)
++{
++    struct ifreq ifr;
++    int ret;
++    ifc_init_ifr(name, &ifr);
++    ifr.ifr_mtu = mtuSz;
++
++    ret = ioctl(ifc_ctl_sock, SIOCSIFMTU, &ifr);
++    if (ret < 0) {
++        printerr("ifc_set_mtu: SIOCSIFMTU failed: %d\n", ret);
++    }
++
++    return ret;
++}
+diff --git a/libutils/RefBase.cpp b/libutils/RefBase.cpp
+index 24737b985..bc82610a4 100644
+--- a/libutils/RefBase.cpp
++++ b/libutils/RefBase.cpp
+@@ -737,6 +737,13 @@ void RefBase::onLastWeakRef(const void* /*id*/)
+ 
+ // ---------------------------------------------------------------------------
+ 
++#ifdef REFBASE_JB_MR1_COMPAT_SYMBOLS
++extern "C" void _ZN7android7RefBase14moveReferencesEPvPKvjRKNS_22ReferenceConverterBaseE(void* /*dst*/, void const* /*src*/, size_t /*n*/,
++        const ReferenceConverterBase& /*caster*/)
++{
++}
++#endif
++
+ #if DEBUG_REFS
+ void RefBase::renameRefs(size_t n, const ReferenceRenamer& renamer) {
+     for (size_t i=0 ; i<n ; i++) {
+diff --git a/libutils/VectorImpl.cpp b/libutils/VectorImpl.cpp
+index ef3277f42..712a16d72 100644
+--- a/libutils/VectorImpl.cpp
++++ b/libutils/VectorImpl.cpp
+@@ -556,6 +556,17 @@ void VectorImpl::_do_move_backward(void* dest, const void* from, size_t num) con
+     do_move_backward(dest, from, num);
+ }
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++void VectorImpl::reservedVectorImpl1() { }
++void VectorImpl::reservedVectorImpl2() { }
++void VectorImpl::reservedVectorImpl3() { }
++void VectorImpl::reservedVectorImpl4() { }
++void VectorImpl::reservedVectorImpl5() { }
++void VectorImpl::reservedVectorImpl6() { }
++void VectorImpl::reservedVectorImpl7() { }
++void VectorImpl::reservedVectorImpl8() { }
++#endif
+++
+ /*****************************************************************************/
+ 
+ SortedVectorImpl::SortedVectorImpl(size_t itemSize, uint32_t flags)
+@@ -675,6 +686,17 @@ ssize_t SortedVectorImpl::remove(const void* item)
+     return i;
+ }
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++void SortedVectorImpl::reservedSortedVectorImpl1() { };
++void SortedVectorImpl::reservedSortedVectorImpl2() { };
++void SortedVectorImpl::reservedSortedVectorImpl3() { };
++void SortedVectorImpl::reservedSortedVectorImpl4() { };
++void SortedVectorImpl::reservedSortedVectorImpl5() { };
++void SortedVectorImpl::reservedSortedVectorImpl6() { };
++void SortedVectorImpl::reservedSortedVectorImpl7() { };
++void SortedVectorImpl::reservedSortedVectorImpl8() { };
++#endif
++
+ /*****************************************************************************/
+ 
+ }; // namespace android
+diff --git a/libutils/include/utils/RefBase.h b/libutils/include/utils/RefBase.h
+index 223b6669d..957531ff4 100644
+--- a/libutils/include/utils/RefBase.h
++++ b/libutils/include/utils/RefBase.h
+@@ -217,6 +217,15 @@ inline bool operator _op_ (const U* o) const {                  \
+ #pragma clang diagnostic ignored "-Wweak-vtables"
+ #endif
+ 
++#ifdef REFBASE_JB_MR1_COMPAT_SYMBOLS
++class ReferenceConverterBase {
++public:
++    virtual size_t getReferenceTypeSize() const = 0;
++    virtual void* getReferenceBase(void const*) const = 0;
++    inline virtual ~ReferenceConverterBase() { }
++};
++#endif
++
+ class ReferenceRenamer {
+ protected:
+     // destructor is purposely not virtual so we avoid code overhead from
+diff --git a/libutils/include/utils/VectorImpl.h b/libutils/include/utils/VectorImpl.h
+index 4dd91fd29..6be4770c4 100644
+--- a/libutils/include/utils/VectorImpl.h
++++ b/libutils/include/utils/VectorImpl.h
+@@ -105,7 +105,19 @@ protected:
+     virtual void            do_splat(void* dest, const void* item, size_t num) const = 0;
+     virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
+     virtual void            do_move_backward(void* dest, const void* from, size_t num) const = 0;
+-    
++
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++    // take care of FBC...
++    virtual void            reservedVectorImpl1();
++    virtual void            reservedVectorImpl2();
++    virtual void            reservedVectorImpl3();
++    virtual void            reservedVectorImpl4();
++    virtual void            reservedVectorImpl5();
++    virtual void            reservedVectorImpl6();
++    virtual void            reservedVectorImpl7();
++    virtual void            reservedVectorImpl8();
++#endif
++  
+ private:
+         void* _grow(size_t where, size_t amount);
+         void  _shrink(size_t where, size_t amount);
+@@ -156,6 +168,18 @@ public:
+ protected:
+     virtual int             do_compare(const void* lhs, const void* rhs) const = 0;
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++    // take care of FBC...
++    virtual void            reservedSortedVectorImpl1();
++    virtual void            reservedSortedVectorImpl2();
++    virtual void            reservedSortedVectorImpl3();
++    virtual void            reservedSortedVectorImpl4();
++    virtual void            reservedSortedVectorImpl5();
++    virtual void            reservedSortedVectorImpl6();
++    virtual void            reservedSortedVectorImpl7();
++    virtual void            reservedSortedVectorImpl8();
++#endif
++
+ private:
+             ssize_t         _indexOrderOf(const void* item, size_t* order = 0) const;
+ 
