@@ -180,5 +180,5 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
 
 # SELinux
-#BOARD_SEPOLICY_DIRS += \
-#    device/samsung/kyleprods/sepolicy
+BOARD_SEPOLICY_DIRS += \
+    device/samsung/kyleprods/sepolicy
