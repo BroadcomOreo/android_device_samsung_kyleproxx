@@ -19,11 +19,10 @@
   - WIFI/Bluetooth/FM-Radio: BCM4330
 
 ### Notice:
-  - Apply both *FIRST LOS 8.0.0 patches.diff* and *SECOND LOS 8.0.0 patches.diff* to root directory of LOS-15.0 source code before build
+  - Apply *FIRST LOS 8.0.0 patches.diff* to root directory of LOS-15.0 source code before build
 
     patch -p1 < device/samsung/kyleprods/FIRST LOS\ 8.0.0\ patches.diff
     
-    patch -p1 < device/samsung/kyleprods/SECOND LOS\ 8.0.0\ patches.diff
     
     
 ### Other resource:
