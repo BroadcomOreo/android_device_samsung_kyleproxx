@@ -104,7 +104,22 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Disable sending usage data
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.nocheckin=1
+# Sensors
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@1.0-impl
 
+# DRM
+PRODUCT_PACKAGES += \
+    android.hardware.drm@1.0-impl
+  
+ # Memtrack
+ PRODUCT_PACKAGES += \
+   android.hardware.memtrack@1.0-impl
+ 
+# USB
+PRODUCT_PACKAGES += \
+    android.hardware.usb@1.0-service
+    
 # Wi-Fi
 PRODUCT_PACKAGES += \
     macloader \
@@ -115,6 +130,9 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     libcld80211 \
     wificond 
+    libwpa_client \
+    wcnss_service \
+    wpa_supplicant_overlay.conf
 
 #hidl hals
 PRODUCT_PACKAGES += \
@@ -136,9 +154,22 @@ PRODUCT_PACKAGES += \
     libgenlock \
     rild_socket
 
+# Thermal HAL
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@1.0-impl
+ 
 # Seccomp policy
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy
+
+# Bluetooth
+PRODUCT_PACKAGES += \
+     libbt-vendor  
+    android.hardware.bluetooth@1.0-impl
+
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -155,9 +186,10 @@ $(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
 # Gatekeeper HAL
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl
-# Keymaster
+    
+# Vibrator
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl
+    android.hardware.vibrator@1.0-impl
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
