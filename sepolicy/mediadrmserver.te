@@ -1,1 +1,0 @@
-allow mediadrmserver system_file:lnk_file { getattr };
