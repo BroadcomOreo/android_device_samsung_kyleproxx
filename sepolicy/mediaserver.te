@@ -1,2 +1,0 @@
-#allow mediaserver system_file:file execmod;
-allow mediaserver cameraserver_service:service_manager add;
