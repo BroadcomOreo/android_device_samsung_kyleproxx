@@ -2,6 +2,9 @@
 # KYLEPROXX (GT-S758x)
 #
 
+# OMX properties
+persist.media.treble_omx=false
+ 
 persist.brcm.log=none
 persist.brcm.cp_crash=none
 persist.brcm.ap_crash=none
