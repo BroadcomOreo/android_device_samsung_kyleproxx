@@ -506,6 +506,19 @@ on post-fs
         user system
         group system
 
+# Bluetooth
+on property:wc_transport.start_root=true
+     start hci_filter_root
+ 
+on property:wc_transport.start_root=false
+     stop hci_filter_root
+ 
+ service hci_filter_root /system/bin/wcnss_filter
+     class late_start
+     user bluetooth
+     group bluetooth diag system
+     disabled
+     
 # RILD
     service ril-daemon /system/vendor/bin/hw/rild
         class main
