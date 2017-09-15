@@ -19,6 +19,9 @@ ro.lcd_min_brightness=10
 ro.product.multi_touch_enabled=true
 ro.product.max_num_touch=2
 
+# Due to some graphic changes in the new Android, it will be better to turn it off
+debug.hwui.use_buffer_age=false
+ 
 net.streaming.rtsp.uaprof=http://wap.samsungmobile.com/uaprof/
 
 ro.opengles.version=131072
