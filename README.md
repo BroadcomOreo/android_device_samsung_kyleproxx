@@ -1,4 +1,4 @@
-# LineageOS 15.0  Device tree for Samsung GT-S7582 (kyleprods)
+# LineageOS 15.0  Device tree for Samsung GT-S7582/GT-S7580 (kyleprods/kyleproxx)
 
 ### Specs (Physically inspected):
   - CPU: Cortex-A9 (Little endian, Dual Core)
@@ -21,7 +21,7 @@
 ### Notice:
   - Apply *LOS 8.0.0 patches.diff* to root directory of LOS-15.0 source code before build
 
-    patch -p1 < device/samsung/kyleprods/LOS\ 8.0.0\ patches.diff
+    patch -p1 < device/samsung/kyleproxx/LOS\ 8.0.0\ patches.diff
     
     
     
@@ -46,7 +46,7 @@ CPU variant     : 0x3
 CPU part        : 0xc09                                          
 CPU revision    : 0                                              
                                                                  
-Hardware        : hawaii_ss_kyleprods                              
+Hardware        : hawaii_ss_kyleproxx                             
 Revision        : 0000                                           
 Serial          : 0000000000000000                               
 ```
@@ -82,3 +82,7 @@ mmcblk0p19: 00470000 00000400 "userdata"
   - The CyanogenMod Team
   - TheNikiz
   - Zim555
+  - Boardcom Oreo
+  - Sostk22
+  - Namdeptrai2003
+  - No_name
