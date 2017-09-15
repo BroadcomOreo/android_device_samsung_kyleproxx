@@ -35,6 +35,10 @@ else
 endif
 TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
 
+# Time
+BOARD_USES_QC_TIME_SERVICES := true
+WITH_LINEAGE_CHARGER := false
+
 # Releasetools
 TARGET_RELEASETOOLS_EXTENSIONS              := device/samsung/kyleproxx/releasetools
 
