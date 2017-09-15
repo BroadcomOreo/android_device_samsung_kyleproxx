@@ -1,1 +1,0 @@
-allow init logd:dir getattr;
