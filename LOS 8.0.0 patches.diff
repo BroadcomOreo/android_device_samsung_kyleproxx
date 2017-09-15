@@ -1153,12 +1153,6 @@ diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl
  TARGET_OTA_ASSERT_DEVICE                    := kyleprods,S7582,GT-S7582,hawaii
 @@ -180,5 +180,5 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
  TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
- 
- # SELinux
--BOARD_SEPOLICY_DIRS += \
--    device/samsung/kyleprods/sepolicy
-+#BOARD_SEPOLICY_DIRS += \
-+#    device/samsung/kyleprods/sepolicy
 
  # Insecure ADB
 -ADDITIONAL_DEFAULT_PROPERTIES += \
