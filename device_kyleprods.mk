@@ -6,16 +6,16 @@ PRODUCT_LOCALES += hdpi
 PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
-DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleprods/overlay
+DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleproxx/overlay
 
 # Init files
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleprods/rootdir/fstab.hawaii_ss_kyleprods:root/fstab.hawaii_ss_kyleprods \
-    device/samsung/kyleprods/rootdir/init.rc:root/init.rc \
-    device/samsung/kyleprods/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
-    device/samsung/kyleprods/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
-    device/samsung/kyleprods/rootdir/init.log.rc:root/init.log.rc \
-    device/samsung/kyleprods/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
+    device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleproxx:root/fstab.hawaii_ss_kyleproxx \
+    device/samsung/kyleproxx/rootdir/init.rc:root/init.rc \
+    device/samsung/kyleproxx/rootdir/init.hawaii_ss_kyleproxx.rc:root/init.hawaii_ss_kyleproxx.rc \
+    device/samsung/kyleproxx/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
+    device/samsung/kyleproxx/rootdir/init.log.rc:root/init.log.rc \
+    device/samsung/kyleproxx/rootdir/ueventd.hawaii_ss_kyleproxx.rc:root/ueventd.hawaii_ss_kyleproxx.rc
 
 # Google's Software Decoder.
 PRODUCT_COPY_FILES += \
@@ -25,7 +25,11 @@ PRODUCT_COPY_FILES += \
 
 # Configs
 PRODUCT_COPY_FILES += \
-    device/samsung/kyleprods/configs/media_codecs.xml:system/etc/media_codecs.xml
+    device/samsung/kyleproxx/configs/media_codecs.xml:system/etc/media_codecs.xml
+    
+# Releasetools script
+PRODUCT_COPY_FILES += \
+    device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
 
 # Insecure ADB
 #ADDITIONAL_DEFAULT_PROPERTIES += \
@@ -181,8 +185,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \
     mobiledata.interfaces=rmnet0 \
     ro.telephony.ril_class=SamsungBCMRIL \
-    persist.radio.multisim.config=dsds \
-    ro.multisim.simslotcount=2 \
+    persist.radio.multisim.config=none \
+    ro.multisim.simslotcount=1 \
     ro.telephony.call_ring.multiple=0 \
     camera2.portability.force_api=1 \
     ro.telephony.call_ring=0
@@ -213,6 +217,6 @@ $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bc
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
-PRODUCT_NAME := full_kyleprods
-PRODUCT_DEVICE := kyleprods
-PRODUCT_MODEL := GT-S7582
+PRODUCT_NAME := full_kyleproxx
+PRODUCT_DEVICE := kyleproxx
+PRODUCT_MODEL := GT-S758x
