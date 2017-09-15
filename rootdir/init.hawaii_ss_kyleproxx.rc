@@ -540,6 +540,7 @@ on property:wc_transport.start_root=false
     #   user wifi
     #   group wifi inet keystore
     class main
+    group system wakelock
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
