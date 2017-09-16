@@ -1167,7 +1167,7 @@ diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl
 @@ -58,9 +58,15 @@ PRODUCT_PACKAGES += \
      audio.primary.default \
      libaudio-resampler \
-     lights.hawaii \
+     lights.kyleproxx \
 +    android.hardware.light@2.0-impl \
      power.hawaii \
 +    android.hardware.power@1.0-impl \
@@ -1209,10 +1209,6 @@ diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl
 +    android.hardware.memtrack@1.0-impl \
 +    libgenlock \
 +    rild_socket
-+
-+# Seccomp policy
-+PRODUCT_COPY_FILES += \
-+    $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy
 +
 +# DRM
 +PRODUCT_PACKAGES += \
