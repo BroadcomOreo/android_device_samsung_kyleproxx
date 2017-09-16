@@ -84,6 +84,8 @@ PRODUCT_PACKAGES += \
 # Snap Camera
 PRODUCT_PACKAGES += \
     Snap
+    android.hardware.camera.provider@2.4-impl \
+    camera.device@3.2-impl \
 
 # Gello Browser
 PRODUCT_PACKAGES += \
@@ -241,6 +243,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Dex2Oat multi-thread
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.fw.dex2oat_thread_count=2
+    
 
 # Dalvik heap config
 include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
