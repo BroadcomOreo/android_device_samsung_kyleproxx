@@ -1,6 +1,35 @@
+diff -ur a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java
+--- a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java	Wed Apr 20 08:50:20 2016
++++ b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java	Thu May 12 01:31:40 2016
+@@ -154,6 +154,11 @@
+         public void enter() {
+             if (mIsInitialized) {
+                 Log.i(LOG_TAG, "Abandoning audio focus: now UNFOCUSED");
++                boolean setRealcallAudioParams = SystemProperties
++                    .getBoolean("ro.telephony.samsung.realcall", false);
++                if (setRealcallAudioParams) {
++                    mAudioManager.setParameters("realcall=off");
++                }
+                 mAudioManager.abandonAudioFocusForCall();
+                 mAudioManager.setMode(AudioManager.MODE_NORMAL);
+ 
+@@ -295,7 +300,12 @@
+             Log.i(LOG_TAG, "Audio focus entering SIM CALL state");
+             boolean setMsimAudioParams = SystemProperties
+                     .getBoolean("ro.multisim.set_audio_params", false);
++            boolean setRealcallAudioParams = SystemProperties
++                    .getBoolean("ro.telephony.samsung.realcall", false);
+             Call call = mCallAudioManager.getForegroundCall();
++            if(setRealcallAudioParams){
++                mAudioManager.setParameters("realcall=on");
++            }
+ 
+             mAudioManager.requestAudioFocusForCall(AudioManager.STREAM_VOICE_CALL,
+                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
 diff -ur a/external/icu/icu4c/source/common/ucnv.c b/external/icu/icu4c/source/common/ucnv.c
---- a/external/icu/icu4c/source/common/ucnv.c	2017-01-02 17:08:26.880000000 +0000
-+++ b/external/icu/icu4c/source/common/ucnv.c	2017-01-02 18:08:47.488000000 +0000
+--- a/external/icu/icu4c/source/common/ucnv.c	2017-05-10 17:12:45.174739233 +0000
++++ b/external/icu/icu4c/source/common/ucnv.c	2017-05-10 17:25:08.102371184 +0000
 @@ -2904,6 +2904,75 @@
              return FALSE;
      }
@@ -78,8 +107,8 @@ diff -ur a/external/icu/icu4c/source/common/ucnv.c b/external/icu/icu4c/source/c
  
  /*
 diff -ur a/frameworks/av/include/media/stagefright/ColorConverter.h b/frameworks/av/include/media/stagefright/ColorConverter.h
---- a/frameworks/av/include/media/stagefright/ColorConverter.h	2017-01-02 17:09:23.120000000 +0000
-+++ b/frameworks/av/include/media/stagefright/ColorConverter.h	2017-01-02 18:08:47.544000000 +0000
+--- a/frameworks/av/include/media/stagefright/ColorConverter.h	2017-05-10 17:12:52.382776888 +0000
++++ b/frameworks/av/include/media/stagefright/ColorConverter.h	2017-05-10 17:25:08.102371184 +0000
 @@ -67,6 +67,9 @@
      status_t convertCbYCrY(
              const BitmapParams &src, const BitmapParams &dst);
@@ -91,9 +120,9 @@ diff -ur a/frameworks/av/include/media/stagefright/ColorConverter.h b/frameworks
              const BitmapParams &src, const BitmapParams &dst);
  
 diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/libstagefright/ACodec.cpp
---- a/frameworks/av/media/libstagefright/ACodec.cpp	2017-01-02 17:09:23.276000000 +0000
-+++ b/frameworks/av/media/libstagefright/ACodec.cpp	2017-01-02 18:08:47.556000000 +0000
-@@ -799,11 +799,7 @@
+--- a/frameworks/av/media/libstagefright/ACodec.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/ACodec.cpp	2017-05-10 17:25:08.110371205 +0000
+@@ -821,11 +821,7 @@
  
      status_t err;
      if (mNativeWindow != NULL && portIndex == kPortIndexOutput) {
@@ -105,7 +134,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
      } else {
          OMX_PARAM_PORTDEFINITIONTYPE def;
          InitOMXParams(&def);
-@@ -1013,6 +1009,25 @@
+@@ -1035,6 +1031,25 @@
      OMX_COLOR_FORMATTYPE eNativeColorFormat = def.format.video.eColorFormat;
      setNativeWindowColorFormat(eNativeColorFormat);
  #endif
@@ -131,7 +160,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
  
      ALOGV("gralloc usage: %#x(OMX) => %#x(ACodec)", omxUsage, usage);
      err = setNativeWindowSizeFormatAndUsage(
-@@ -1022,7 +1037,7 @@
+@@ -1044,7 +1059,7 @@
  #ifdef USE_SAMSUNG_COLORFORMAT
              eNativeColorFormat,
  #else
@@ -140,7 +169,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
  #endif
              mRotationDegrees,
              usage,
-@@ -1859,14 +1874,12 @@
+@@ -1885,14 +1900,12 @@
          }
  #endif
  
@@ -160,7 +189,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
  
      int32_t prependSPSPPS = 0;
      if (encoder
-@@ -2367,22 +2380,24 @@
+@@ -2393,22 +2406,24 @@
          err = setMinBufferSize(kPortIndexInput, (size_t)maxInputSize);
      } else if (!strcmp("OMX.Nvidia.aac.decoder", mComponentName.c_str())) {
          err = setMinBufferSize(kPortIndexInput, 8192);  // XXX
@@ -199,7 +228,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
  
      // NOTE: both mBaseOutputFormat and mOutputFormat are outputFormat to signal first frame.
      mBaseOutputFormat = outputFormat;
-@@ -3176,12 +3191,37 @@
+@@ -3202,12 +3217,37 @@
      format.nIndex = 0;
      bool found = false;
  
@@ -237,7 +266,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
          if (err != OK) {
              return err;
          }
-@@ -3197,6 +3237,7 @@
+@@ -3223,6 +3263,7 @@
              colorFormat = format.eColorFormat;
          }
  
@@ -245,7 +274,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
          // The following assertion is violated by TI's video decoder.
          // CHECK_EQ(format.nIndex, index);
  
-@@ -3290,6 +3331,21 @@
+@@ -3316,6 +3357,21 @@
                  || format.eColorFormat == OMX_TI_COLOR_FormatYUV420PackedSemiPlanar) {
              break;
          }
@@ -267,7 +296,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
          // find best legacy non-standard format
          OMX_U32 flexibleEquivalent;
          if (legacyFormat.eColorFormat == OMX_COLOR_FormatUnused
-@@ -4869,6 +4925,16 @@
+@@ -4893,6 +4949,16 @@
      image.mNumPlanes = 0;
  
      const OMX_COLOR_FORMATTYPE fmt = params.eColorFormat;
@@ -284,7 +313,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
      image.mWidth = params.nFrameWidth;
      image.mHeight = params.nFrameHeight;
  
-@@ -7780,14 +7846,14 @@
+@@ -7823,14 +7889,14 @@
          }
      }
  
@@ -307,7 +336,7 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
  
      int32_t intraRefreshPeriod = 0;
      if (params->findInt32("intra-refresh-period", &intraRefreshPeriod)
-@@ -8431,9 +8497,13 @@
+@@ -8495,9 +8561,13 @@
                      builder->addColorFormat(flexibleEquivalent);
                  }
              }
@@ -324,95 +353,9 @@ diff -ur a/frameworks/av/media/libstagefright/ACodec.cpp b/frameworks/av/media/l
              if (index == kMaxIndicesToCheck) {
                  ALOGW("[%s] stopping checking formats after %u: %s(%x)",
                          name.c_str(), index,
-diff -ur a/frameworks/av/media/libstagefright/MPEG4Writer.cpp b/frameworks/av/media/libstagefright/MPEG4Writer.cpp
---- a/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-01-02 17:09:23.288000000 +0000
-+++ b/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-01-02 18:08:47.560000000 +0000
-@@ -2539,18 +2539,10 @@
-         if (mResumed) {
-             int64_t durExcludingEarlierPausesUs = timestampUs - previousPausedDurationUs;
-             if (WARN_UNLESS(durExcludingEarlierPausesUs >= 0ll, "for %s track", trackName)) {
--                copy->release();
--                mSource->stop();
--                mIsMalformed = true;
--                break;
-             }
- 
-             int64_t pausedDurationUs = durExcludingEarlierPausesUs - mTrackDurationUs;
-             if (WARN_UNLESS(pausedDurationUs >= lastDurationUs, "for %s track", trackName)) {
--                copy->release();
--                mSource->stop();
--                mIsMalformed = true;
--                break;
-             }
- 
-             previousPausedDurationUs += pausedDurationUs - lastDurationUs;
-@@ -2559,10 +2551,6 @@
- 
-         timestampUs -= previousPausedDurationUs;
-         if (WARN_UNLESS(timestampUs >= 0ll, "for %s track", trackName)) {
--            copy->release();
--            mSource->stop();
--            mIsMalformed = true;
--            break;
-         }
- 
-         if (!mIsAudio) {
-@@ -2588,10 +2576,6 @@
-             cttsOffsetTimeUs =
-                     timestampUs + kMaxCttsOffsetTimeUs - decodingTimeUs;
-             if (WARN_UNLESS(cttsOffsetTimeUs >= 0ll, "for %s track", trackName)) {
--                copy->release();
--                mSource->stop();
--                mIsMalformed = true;
--                break;
-             }
- 
-             timestampUs = decodingTimeUs;
-@@ -2602,10 +2586,6 @@
-             currCttsOffsetTimeTicks =
-                     (cttsOffsetTimeUs * mTimeScale + 500000LL) / 1000000LL;
-             if (WARN_UNLESS(currCttsOffsetTimeTicks <= 0x0FFFFFFFFLL, "for %s track", trackName)) {
--                copy->release();
--                mSource->stop();
--                mIsMalformed = true;
--                break;
-             }
- 
-             if (mStszTableEntries->count() == 0) {
-@@ -2646,10 +2626,6 @@
-         }
- 
-         if (WARN_UNLESS(timestampUs >= 0ll, "for %s track", trackName)) {
--            copy->release();
--            mSource->stop();
--            mIsMalformed = true;
--            break;
-         }
- 
-         ALOGV("%s media time stamp: %" PRId64 " and previous paused duration %" PRId64,
-@@ -2669,10 +2645,6 @@
-         if (currDurationTicks < 0ll) {
-             ALOGE("do not support out of order frames (timestamp: %lld < last: %lld for %s track",
-                     (long long)timestampUs, (long long)lastTimestampUs, trackName);
--            copy->release();
--            mSource->stop();
--            mIsMalformed = true;
--            break;
-         }
- 
-         // if the duration is different for this sample, see if it is close enough to the previous
-@@ -2770,7 +2742,6 @@
-     }
- 
-     if (isTrackMalFormed()) {
--        err = ERROR_MALFORMED;
-     }
- 
-     mOwner->trackProgressStatus(mTrackId, -1, err);
-Only in b/frameworks/av/media/libstagefright: MPEG4Writer.cpp.orig
 diff -ur a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
---- a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-01-02 17:09:23.668000000 +0000
-+++ b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-01-02 18:08:47.564000000 +0000
+--- a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp	2017-05-10 17:25:08.114371215 +0000
 @@ -48,6 +48,7 @@
      switch (mSrcFormat) {
          case OMX_COLOR_FormatYUV420Planar:
@@ -511,9 +454,94 @@ diff -ur a/frameworks/av/media/libstagefright/colorconversion/ColorConverter.cpp
 -}  // namespace android
 +}  // namespace android
 \ No newline at end of file
+diff -ur a/frameworks/av/media/libstagefright/MPEG4Writer.cpp b/frameworks/av/media/libstagefright/MPEG4Writer.cpp
+--- a/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-05-10 17:12:52.406777014 +0000
++++ b/frameworks/av/media/libstagefright/MPEG4Writer.cpp	2017-05-10 17:25:08.114371215 +0000
+@@ -2547,18 +2547,10 @@
+         if (mResumed) {
+             int64_t durExcludingEarlierPausesUs = timestampUs - previousPausedDurationUs;
+             if (WARN_UNLESS(durExcludingEarlierPausesUs >= 0ll, "for %s track", trackName)) {
+-                copy->release();
+-                mSource->stop();
+-                mIsMalformed = true;
+-                break;
+             }
+ 
+             int64_t pausedDurationUs = durExcludingEarlierPausesUs - mTrackDurationUs;
+             if (WARN_UNLESS(pausedDurationUs >= lastDurationUs, "for %s track", trackName)) {
+-                copy->release();
+-                mSource->stop();
+-                mIsMalformed = true;
+-                break;
+             }
+ 
+             previousPausedDurationUs += pausedDurationUs - lastDurationUs;
+@@ -2567,10 +2559,6 @@
+ 
+         timestampUs -= previousPausedDurationUs;
+         if (WARN_UNLESS(timestampUs >= 0ll, "for %s track", trackName)) {
+-            copy->release();
+-            mSource->stop();
+-            mIsMalformed = true;
+-            break;
+         }
+ 
+         if (!mIsAudio) {
+@@ -2599,10 +2587,6 @@
+                 cttsOffsetTimeUs = 0;
+             }
+             if (WARN_UNLESS(cttsOffsetTimeUs >= 0ll, "for %s track", trackName)) {
+-                copy->release();
+-                mSource->stop();
+-                mIsMalformed = true;
+-                break;
+             }
+ 
+             timestampUs = decodingTimeUs;
+@@ -2613,10 +2597,6 @@
+             currCttsOffsetTimeTicks =
+                     (cttsOffsetTimeUs * mTimeScale + 500000LL) / 1000000LL;
+             if (WARN_UNLESS(currCttsOffsetTimeTicks <= 0x0FFFFFFFFLL, "for %s track", trackName)) {
+-                copy->release();
+-                mSource->stop();
+-                mIsMalformed = true;
+-                break;
+             }
+ 
+             if (mStszTableEntries->count() == 0) {
+@@ -2655,10 +2635,6 @@
+         }
+ 
+         if (WARN_UNLESS(timestampUs >= 0ll, "for %s track", trackName)) {
+-            copy->release();
+-            mSource->stop();
+-            mIsMalformed = true;
+-            break;
+         }
+ 
+         ALOGV("%s media time stamp: %" PRId64 " and previous paused duration %" PRId64,
+@@ -2678,10 +2654,6 @@
+         if (currDurationTicks < 0ll) {
+             ALOGE("do not support out of order frames (timestamp: %lld < last: %lld for %s track",
+                     (long long)timestampUs, (long long)lastTimestampUs, trackName);
+-            copy->release();
+-            mSource->stop();
+-            mIsMalformed = true;
+-            break;
+         }
+ 
+         // if the duration is different for this sample, see if it is close enough to the previous
+@@ -2779,7 +2751,6 @@
+     }
+ 
+     if (isTrackMalFormed()) {
+-        err = ERROR_MALFORMED;
+     }
+ 
+     mOwner->trackProgressStatus(mTrackId, -1, err);
 diff -ur a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp
---- a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-01-02 17:09:23.700000000 +0000
-+++ b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-01-02 18:08:47.564000000 +0000
+--- a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-05-10 17:12:52.410777035 +0000
++++ b/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp	2017-05-10 17:25:08.114371215 +0000
 @@ -380,6 +380,7 @@
              }
          } else if (type == kMetadataBufferTypeANWBuffer
@@ -531,9 +559,9 @@ diff -ur a/frameworks/av/media/libstagefright/omx/GraphicBufferSource.cpp b/fram
      }
  
 diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/services/audioflinger/Threads.cpp
---- a/frameworks/av/services/audioflinger/Threads.cpp	2017-01-02 17:09:23.788000000 +0000
-+++ b/frameworks/av/services/audioflinger/Threads.cpp	2017-01-02 18:08:47.576000000 +0000
-@@ -6315,6 +6315,7 @@
+--- a/frameworks/av/services/audioflinger/Threads.cpp	2017-05-10 17:12:52.426777118 +0000
++++ b/frameworks/av/services/audioflinger/Threads.cpp	2017-05-10 17:25:08.122371236 +0000
+@@ -6468,6 +6468,7 @@
          mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER] += framesRead;
          mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER] = systemTime();
  
@@ -541,7 +569,7 @@ diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/servi
          // Update server timestamp with kernel stats
          if (mInput->stream->get_capture_position != nullptr
                  && mPipeSource.get() == nullptr /* don't obtain for FastCapture, could block */) {
-@@ -6330,6 +6331,7 @@
+@@ -6483,6 +6484,7 @@
                  // as the read obtains a lock, preventing the timestamp call from executing.
              }
          }
@@ -549,51 +577,10 @@ diff -ur a/frameworks/av/services/audioflinger/Threads.cpp b/frameworks/av/servi
          // Use this to track timestamp information
          // ALOGD("%s", mTimestamp.toString().c_str());
 
-diff -ur a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java
---- a/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-01-02 17:09:38.364000000 +0000
-+++ b/frameworks/base/services/core/java/com/android/server/power/PowerManagerService.java	2017-01-02 18:08:47.544000000 +0000
-@@ -194,7 +194,7 @@
-     private static final int HALT_MODE_REBOOT = 1;
-     private static final int HALT_MODE_REBOOT_SAFE_MODE = 2;
- 
--    private static final int BUTTON_ON_DURATION = 5 * 1000;
-+    private static final int BUTTON_ON_DURATION = 2 * 1000;
- 
-     private static final float PROXIMITY_NEAR_THRESHOLD = 5.0f;
- 
-@@ -272,6 +272,7 @@
-     // Timestamp of the last call to user activity.
-     private long mLastUserActivityTime;
-     private long mLastUserActivityTimeNoChangeLights;
-+    private long mLastButtonActivityTime;
- 
-     // Timestamp of last interactive power hint.
-     private long mLastInteractivePowerHintTime;
-@@ -1291,6 +1292,10 @@
-                     return true;
-                 }
-             } else {
-+                if (eventTime > mLastButtonActivityTime && (event & PowerManager.USER_ACTIVITY_EVENT_BUTTON) !=0) {
-+                    mLastButtonActivityTime = eventTime;
-+                    mDirty |= DIRTY_USER_ACTIVITY;
-+                }
-                 if (eventTime > mLastUserActivityTime) {
-                     mLastUserActivityTime = eventTime;
-                     mDirty |= DIRTY_USER_ACTIVITY;
-@@ -1851,7 +1856,7 @@
-                             mKeyboardLight.setBrightness(mKeyboardVisible ?
-                                     keyboardBrightness : 0);
-                             if (mButtonTimeout != 0
--                                    && now > mLastUserActivityTime + mButtonTimeout) {
-+                                    && now > mLastButtonActivityTime + mButtonTimeout) {
-                                 mButtonsLight.setBrightness(0);
-                             } else {
-                                 if (!mProximityPositive) {
-Only in b/frameworks/base/services/core/java/com/android/server/power: PowerManagerService.java.orig
 diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java
---- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-01-02 17:09:38.456000000 +0000
-+++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-01-02 18:08:47.496000000 +0000
-@@ -3743,49 +3743,19 @@
+--- a/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:12:55.470793011 +0000
++++ b/frameworks/base/telephony/java/android/telephony/TelephonyManager.java	2017-05-10 17:25:08.126371247 +0000
+@@ -3744,49 +3744,19 @@
       * @hide
       */
      public static void setTelephonyProperty(int phoneId, String property, String value) {
@@ -648,7 +635,7 @@ diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.jav
      }
  
      /**
-@@ -3882,15 +3852,21 @@
+@@ -3883,15 +3853,21 @@
       * @hide
       */
      public static String getTelephonyProperty(int phoneId, String property, String defaultVal) {
@@ -678,10 +665,9 @@ diff -ur a/frameworks/base/telephony/java/android/telephony/TelephonyManager.jav
      }
  
      /** @hide */
-Only in b/frameworks/base/telephony/java/android/telephony: TelephonyManager.java.orig
 diff -ur a/frameworks/native/libs/binder/Parcel.cpp b/frameworks/native/libs/binder/Parcel.cpp
---- a/frameworks/native/libs/binder/Parcel.cpp	2017-01-02 17:09:40.520000000 +0000
-+++ b/frameworks/native/libs/binder/Parcel.cpp	2017-01-02 18:08:47.516000000 +0000
+--- a/frameworks/native/libs/binder/Parcel.cpp	2017-05-10 17:12:55.854795015 +0000
++++ b/frameworks/native/libs/binder/Parcel.cpp	2017-05-10 17:25:08.126371247 +0000
 @@ -1082,6 +1082,12 @@
      return writeString16(str.string(), str.size());
  }
@@ -696,9 +682,9 @@ diff -ur a/frameworks/native/libs/binder/Parcel.cpp b/frameworks/native/libs/bin
  {
      if (str == NULL) return writeInt32(-1);
 diff -ur a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp
---- a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-01-02 17:09:40.628000000 +0000
-+++ b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-01-02 18:08:47.520000000 +0000
-@@ -3686,6 +3686,10 @@
+--- a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-05-10 17:12:55.854795015 +0000
++++ b/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp	2017-05-10 17:25:08.194371428 +0000
+@@ -3727,6 +3727,10 @@
          bool isLocalScreenshot, bool useReadPixels)
  {
      ATRACE_CALL();
@@ -709,11 +695,10 @@ diff -ur a/frameworks/native/services/surfaceflinger/SurfaceFlinger_hwc1.cpp b/f
  
      // get screen geometry
      uint32_t hw_w = hw->getWidth();
-Only in b/frameworks/native/services/surfaceflinger: SurfaceFlinger_hwc1.cpp.orig
 diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java
---- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-01-02 17:09:41.632000000 +0000
-+++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-01-02 18:08:47.500000000 +0000
-@@ -237,6 +237,7 @@
+--- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-05-10 17:12:56.242797041 +0000
++++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phone.java	2017-05-10 17:25:08.194371428 +0000
+@@ -239,6 +239,7 @@
      private boolean mDnsCheckDisabled;
      public DcTracker mDcTracker;
      private boolean mDoesRilSendMultipleCallRing;
@@ -721,7 +706,7 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phon
      private int mCallRingContinueToken;
      private int mCallRingDelay;
      private boolean mIsVoiceCapable = true;
-@@ -477,6 +478,10 @@
+@@ -479,6 +480,10 @@
          mDoesRilSendMultipleCallRing = SystemProperties.getBoolean(
                  TelephonyProperties.PROPERTY_RIL_SENDS_MULTIPLE_CALL_RING, true);
          Rlog.d(LOG_TAG, "mDoesRilSendMultipleCallRing=" + mDoesRilSendMultipleCallRing);
@@ -732,7 +717,7 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phon
  
          mCallRingDelay = SystemProperties.getInt(
                  TelephonyProperties.PROPERTY_CALL_RING_DELAY, 3000);
-@@ -2748,6 +2753,13 @@
+@@ -2767,6 +2772,13 @@
      public void notifyNewRingingConnectionP(Connection cn) {
          if (!mIsVoiceCapable)
              return;
@@ -746,7 +731,7 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phon
          AsyncResult ar = new AsyncResult(null, cn, null);
          mNewRingingConnectionRegistrants.notifyRegistrants(ar);
      }
-@@ -3459,6 +3471,7 @@
+@@ -3481,6 +3493,7 @@
          pw.println(" mDnsCheckDisabled=" + mDnsCheckDisabled);
          pw.println(" mDcTracker=" + mDcTracker);
          pw.println(" mDoesRilSendMultipleCallRing=" + mDoesRilSendMultipleCallRing);
@@ -754,10 +739,9 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/Phon
          pw.println(" mCallRingContinueToken=" + mCallRingContinueToken);
          pw.println(" mCallRingDelay=" + mCallRingDelay);
          pw.println(" mIsVoiceCapable=" + mIsVoiceCapable);
-Only in b/frameworks/opt/telephony/src/java/com/android/internal/telephony: Phone.java.orig
 diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
---- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-01-02 17:09:41.636000000 +0000
-+++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-01-02 18:08:47.508000000 +0000
+--- a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-05-10 17:12:56.254797104 +0000
++++ b/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java	2017-05-10 17:25:08.194371428 +0000
 @@ -327,7 +327,7 @@
      static final int RESPONSE_SOLICITED_ACK_EXP = 3;
      static final int RESPONSE_UNSOLICITED_ACK_EXP = 4;
@@ -767,10 +751,9 @@ diff -ur a/frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.
  
      static final int SOCKET_OPEN_RETRY_MILLIS = 4 * 1000;
  
-Only in b/frameworks/opt/telephony/src/java/com/android/internal/telephony: RIL.java.orig
 diff -ur a/hardware/broadcom/libbt/src/userial_vendor.c b/hardware/broadcom/libbt/src/userial_vendor.c
---- a/hardware/broadcom/libbt/src/userial_vendor.c	2017-01-02 17:09:43.844000000 +0000
-+++ b/hardware/broadcom/libbt/src/userial_vendor.c	2017-01-02 18:08:47.524000000 +0000
+--- a/hardware/broadcom/libbt/src/userial_vendor.c	2017-05-10 17:12:56.686799359 +0000
++++ b/hardware/broadcom/libbt/src/userial_vendor.c	2017-05-10 17:25:08.194371428 +0000
 @@ -196,6 +196,9 @@
      uint8_t data_bits;
      uint16_t parity;
@@ -790,11 +773,10 @@ diff -ur a/hardware/broadcom/libbt/src/userial_vendor.c b/hardware/broadcom/libb
 +
      userial_ioctl_init_bt_wake(vnd_userial.fd);
  #endif
- 
 diff -ur a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java
---- a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-01-02 17:10:05.676000000 +0000
-+++ b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-01-02 18:08:47.580000000 +0000
-@@ -259,7 +259,6 @@
+--- a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-05-10 17:13:01.914826638 +0000
++++ b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSettings.java	2017-05-10 17:25:08.194371428 +0000
+@@ -262,7 +262,6 @@
          // Only visible on devices that does not have a navigation bar already,
          // and don't even try unless the existing keys can be disabled
          boolean needsNavigationBar = false;
@@ -802,7 +784,7 @@ diff -ur a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSetting
              try {
                  IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
                  needsNavigationBar = wm.needsNavigationBar();
-@@ -274,9 +273,6 @@
+@@ -277,9 +276,6 @@
                  mNavigationPreferencesCat.setEnabled(mDisableNavigationKeys.isChecked());
                  updateDisableNavkeysCategories(mDisableNavigationKeys.isChecked());
              }
@@ -812,10 +794,19 @@ diff -ur a/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input/ButtonSetting
  
          if (hasPowerKey) {
              if (!TelephonyUtils.isVoiceCapable(getActivity())) {
-Only in b/packages/apps/CMParts/src/org/cyanogenmod/cmparts/input: ButtonSettings.java.orig
+diff -ur a/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java b/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java
+--- a/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java	2017-04-14 15:25:57.169786285 +0000
++++ b/packages/inputmethods/LatinIME/java-overridable/src/com/android/inputmethod/latin/define/JniLibName.java	2017-05-10 17:26:50.026663297 +0000
+@@ -22,5 +22,5 @@
+     }
+ 
+     public static final String JNI_LIB_NAME = "jni_latinime";
+-    public static final String JNI_LIB_NAME2 = "jni_latinimegoogle";
++    public static final String JNI_LIB_NAME2 = "jni_unbundled_latinimegoogle";
+ }
 diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/services/Telephony/res/values/cm_strings.xml
---- a/packages/services/Telephony/res/values/cm_strings.xml	2017-01-02 17:10:19.276000000 +0000
-+++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-01-02 18:08:47.508000000 +0000
+--- a/packages/services/Telephony/res/values/cm_strings.xml	2017-08-08 12:43:17.154292991 +0000
++++ b/packages/services/Telephony/res/values/cm_strings.xml	2017-08-08 12:44:10.310283706 +0000
 @@ -51,6 +51,20 @@
      <string name="call_notif_callconnectedect">Call connected through explicit call transfer</string>
  
@@ -838,22 +829,18 @@ diff -ur a/packages/services/Telephony/res/values/cm_strings.xml b/packages/serv
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_cdma_evdo_choice">TD-SCDMA/GSM/WCDMA/CDMA/EvDo</string>
      <string name="preferred_network_mode_td_scdma_gsm_wcdma_lte_choice">TD-SCDMA/GSM/WCDMA/LTE</string>
 diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java
---- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-03-03 12:07:23.664000000 +0000
-+++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-03-03 12:24:59.980000000 +0000
-@@ -830,6 +830,12 @@
+--- a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-08-08 12:43:17.170292989 +0000
++++ b/packages/services/Telephony/src/com/android/phone/MobileNetworkSettings.java	2017-08-08 13:06:33.993910416 +0000
+@@ -834,6 +834,8 @@
                  case Phone.NT_MODE_LTE_TDSCDMA_GSM_WCDMA:
                  case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
                  case Phone.NT_MODE_LTE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
 +                case Phone.NT_MODE_WCDMA_ONLY:
 +                case Phone.NT_MODE_GSM_UMTS:
-+                case Phone.NT_MODE_EVDO_NO_CDMA:
-+                case Phone.NT_MODE_GLOBAL:
-+                case Phone.NT_MODE_LTE_ONLY:
-+                case Phone.NT_MODE_LTE_WCDMA:
                      // This is one of the modes we recognize
                      break;
                  default:
-@@ -1072,61 +1078,56 @@
+@@ -1076,28 +1078,24 @@
                  mButtonEnabledNetworks.setSummary(R.string.network_3G);
                  break;
              case Phone.NT_MODE_WCDMA_ONLY:
@@ -896,89 +883,9 @@ diff -ur a/packages/services/Telephony/src/com/android/phone/MobileNetworkSettin
                  break;
              case Phone.NT_MODE_LTE_GSM_WCDMA:
                  if (isWorldMode()) {
--                    mButtonEnabledNetworks.setSummary(
--                            R.string.preferred_network_mode_lte_gsm_umts_summary);
-                     controlCdmaOptions(false);
-                     controlGsmOptions(true);
--                    break;
-                 }
--            case Phone.NT_MODE_LTE_ONLY:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_GSM_WCDMA));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_gsm_wcdma);
-+                break;
-             case Phone.NT_MODE_LTE_WCDMA:
--                if (!mIsGlobalCdma) {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_GSM_WCDMA));
--                    mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
--                            ? R.string.network_4G : R.string.network_lte);
--                } else {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_CDMA_EVDO_GSM_WCDMA));
--                    mButtonEnabledNetworks.setSummary(R.string.network_global);
--                }
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_WCDMA));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_cdma);
-+                break;
-+            case Phone.NT_MODE_LTE_ONLY:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_ONLY));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G_only : R.string.network_lte_only);
-                 break;
-             case Phone.NT_MODE_LTE_CDMA_AND_EVDO:
-                 if (isWorldMode()) {
--                    mButtonEnabledNetworks.setSummary(
--                            R.string.preferred_network_mode_lte_cdma_summary);
-                     controlCdmaOptions(true);
-                     controlGsmOptions(false);
--                } else {
--                    mButtonEnabledNetworks.setValue(
--                            Integer.toString(Phone.NT_MODE_LTE_CDMA_AND_EVDO));
--                    mButtonEnabledNetworks.setSummary(R.string.network_lte);
-                 }
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_LTE_CDMA_AND_EVDO));
-+                mButtonEnabledNetworks.setSummary((mShow4GForLTE == true)
-+                        ? R.string.network_4G : R.string.network_lte_cdma_and_evdo);
-                 break;
-             case Phone.NT_MODE_TDSCDMA_CDMA_EVDO_GSM_WCDMA:
-                 mButtonEnabledNetworks.setValue(
-@@ -1134,16 +1135,24 @@
-                 mButtonEnabledNetworks.setSummary(R.string.network_3G);
-                 break;
-             case Phone.NT_MODE_CDMA:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_CDMA));
-+                mButtonEnabledNetworks.setSummary(R.string.network_cdma);
-+                break;
-             case Phone.NT_MODE_EVDO_NO_CDMA:
-+                mButtonEnabledNetworks.setValue(
-+                        Integer.toString(Phone.NT_MODE_EVDO_NO_CDMA));
-+                mButtonEnabledNetworks.setSummary(R.string.network_evdo_no_cdma);
-+                break;
-             case Phone.NT_MODE_GLOBAL:
-                 mButtonEnabledNetworks.setValue(
--                        Integer.toString(Phone.NT_MODE_CDMA));
--                mButtonEnabledNetworks.setSummary(R.string.network_3G);
-+                        Integer.toString(Phone.NT_MODE_GLOBAL));
-+                mButtonEnabledNetworks.setSummary(R.string.network_3g_global);
-                 break;
-             case Phone.NT_MODE_CDMA_NO_EVDO:
-                 mButtonEnabledNetworks.setValue(
-                         Integer.toString(Phone.NT_MODE_CDMA_NO_EVDO));
--                mButtonEnabledNetworks.setSummary(R.string.network_1x);
-+                mButtonEnabledNetworks.setSummary(R.string.network_cdma_no_evdo);
-                 break;
-             case Phone.NT_MODE_TDSCDMA_ONLY:
-                 mButtonEnabledNetworks.setValue(
 diff -ur a/system/core/include/utils/RefBase.h b/system/core/include/utils/RefBase.h
---- a/system/core/include/utils/RefBase.h	2017-01-02 17:12:13.988000000 +0000
-+++ b/system/core/include/utils/RefBase.h	2017-01-02 18:08:47.528000000 +0000
+--- a/system/core/include/utils/RefBase.h	2017-05-10 17:13:09.470866037 +0000
++++ b/system/core/include/utils/RefBase.h	2017-05-10 17:25:08.198371439 +0000
 @@ -53,6 +53,15 @@
  
  // ---------------------------------------------------------------------------
@@ -996,8 +903,8 @@ diff -ur a/system/core/include/utils/RefBase.h b/system/core/include/utils/RefBa
  protected:
      // destructor is purposedly not virtual so we avoid code overhead from
 diff -ur a/system/core/include/utils/VectorImpl.h b/system/core/include/utils/VectorImpl.h
---- a/system/core/include/utils/VectorImpl.h	2017-01-02 17:12:13.992000000 +0000
-+++ b/system/core/include/utils/VectorImpl.h	2017-01-02 18:08:47.528000000 +0000
+--- a/system/core/include/utils/VectorImpl.h	2017-05-10 17:13:09.470866037 +0000
++++ b/system/core/include/utils/VectorImpl.h	2017-05-10 17:25:08.198371439 +0000
 @@ -105,7 +105,19 @@
      virtual void            do_splat(void* dest, const void* item, size_t num) const = 0;
      virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
@@ -1039,9 +946,9 @@ diff -ur a/system/core/include/utils/VectorImpl.h b/system/core/include/utils/Ve
              ssize_t         _indexOrderOf(const void* item, size_t* order = 0) const;
  
 diff -ur a/system/core/init/init.cpp b/system/core/init/init.cpp
---- a/system/core/init/init.cpp	2017-01-02 17:12:13.996000000 +0000
-+++ b/system/core/init/init.cpp	2017-01-02 18:08:47.532000000 +0000
-@@ -437,7 +437,7 @@
+--- a/system/core/init/init.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/init/init.cpp	2017-05-10 17:25:08.198371439 +0000
+@@ -443,7 +443,7 @@
  enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
  
  static selinux_enforcing_status selinux_status_from_cmdline() {
@@ -1051,8 +958,8 @@ diff -ur a/system/core/init/init.cpp b/system/core/init/init.cpp
      import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
          if (key == "androidboot.selinux" && value == "permissive") {
 diff -ur a/system/core/init/service.cpp b/system/core/init/service.cpp
---- a/system/core/init/service.cpp	2017-01-02 17:12:14.000000000 +0000
-+++ b/system/core/init/service.cpp	2017-01-02 18:08:47.532000000 +0000
+--- a/system/core/init/service.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/init/service.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -373,9 +373,9 @@
          }
          if (rc == 0 && scon == mycon) {
@@ -1067,8 +974,8 @@ diff -ur a/system/core/init/service.cpp b/system/core/init/service.cpp
          free(mycon);
          free(fcon);
 diff -ur a/system/core/libnetutils/ifc_utils.c b/system/core/libnetutils/ifc_utils.c
---- a/system/core/libnetutils/ifc_utils.c	2017-01-02 17:12:14.064000000 +0000
-+++ b/system/core/libnetutils/ifc_utils.c	2017-01-02 18:08:47.536000000 +0000
+--- a/system/core/libnetutils/ifc_utils.c	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/libnetutils/ifc_utils.c	2017-05-10 17:25:08.202371450 +0000
 @@ -737,3 +737,18 @@
  
      return 0;
@@ -1089,8 +996,8 @@ diff -ur a/system/core/libnetutils/ifc_utils.c b/system/core/libnetutils/ifc_uti
 +    return ret;
 +}
 diff -ur a/system/core/libutils/RefBase.cpp b/system/core/libutils/RefBase.cpp
---- a/system/core/libutils/RefBase.cpp	2017-01-02 17:12:14.108000000 +0000
-+++ b/system/core/libutils/RefBase.cpp	2017-01-02 18:08:47.536000000 +0000
+--- a/system/core/libutils/RefBase.cpp	2017-05-10 17:13:09.474866058 +0000
++++ b/system/core/libutils/RefBase.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -711,6 +711,13 @@
  
  // ---------------------------------------------------------------------------
@@ -1105,10 +1012,9 @@ diff -ur a/system/core/libutils/RefBase.cpp b/system/core/libutils/RefBase.cpp
  #if DEBUG_REFS
  void RefBase::renameRefs(size_t n, const ReferenceRenamer& renamer) {
      for (size_t i=0 ; i<n ; i++) {
-Only in b/system/core/libutils: RefBase.cpp.orig
 diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl.cpp
---- a/system/core/libutils/VectorImpl.cpp	2017-01-02 17:12:14.112000000 +0000
-+++ b/system/core/libutils/VectorImpl.cpp	2017-01-02 18:08:47.540000000 +0000
+--- a/system/core/libutils/VectorImpl.cpp	2017-05-10 17:13:09.482866100 +0000
++++ b/system/core/libutils/VectorImpl.cpp	2017-05-10 17:25:08.202371450 +0000
 @@ -556,6 +556,17 @@
      do_move_backward(dest, from, num);
  }
@@ -1144,117 +1050,4 @@ diff -ur a/system/core/libutils/VectorImpl.cpp b/system/core/libutils/VectorImpl
 +
  /*****************************************************************************/
  
--TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
--TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
-+#TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
-+#TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
- 
- # Assert
- TARGET_OTA_ASSERT_DEVICE                    := kyleprods,S7582,GT-S7582,hawaii
-@@ -180,5 +180,5 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
- TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleprods/include
-
- # Insecure ADB
--ADDITIONAL_DEFAULT_PROPERTIES += \
--    ro.secure=0 \
--    ro.adb.secure=0 \
-+#ADDITIONAL_DEFAULT_PROPERTIES += \
-+#    ro.secure=0 \
-+#    ro.adb.secure=0 \
- 
- # Filesystem management tools
- PRODUCT_PACKAGES += \
-@@ -58,9 +58,15 @@ PRODUCT_PACKAGES += \
-     audio.primary.default \
-     libaudio-resampler \
-     lights.kyleproxx \
-+    android.hardware.light@2.0-impl \
-     power.hawaii \
-+    android.hardware.power@1.0-impl \
-     libstagefrighthw
- 
-+# RenderScript HAL
-+PRODUCT_PACKAGES += \
-+    android.hardware.renderscript@1.0-impl
-+
- # Media
- PRODUCT_PROPERTY_OVERRIDES += \
-     media.stagefright.legacyencoder=true \
-@@ -101,7 +107,53 @@ PRODUCT_PACKAGES += \
-     hostapd \
-     libnetcmdiface \
-     wpa_supplicant \
--    wpa_supplicant.conf
-+    wpa_supplicant.conf \
-+    android.hardware.wifi@1.0-service \
-+    libcld80211 \
-+    wificond 
-+
-+#hidl hals
-+PRODUCT_PACKAGES += \
-+    android.hardware.audio@2.0-impl \
-+    android.hardware.audio.effect@2.0-impl \
-+    android.hardware.broadcastradio@1.0-impl \
-+    android.hardware.soundtrigger@2.0-impl
-+
-+PRODUCT_PACKAGES += \
-+    libbt-vendor \
-+    android.hardware.bluetooth@1.0-impl
-+
-+PRODUCT_PACKAGES += \
-+    android.hardware.graphics.allocator@2.0-impl \
-+    android.hardware.graphics.allocator@2.0-service \
-+    android.hardware.graphics.composer@2.1-impl \
-+    android.hardware.graphics.mapper@2.0-impl \
-+    android.hardware.memtrack@1.0-impl \
-+    libgenlock \
-+    rild_socket
-+
-+# DRM
-+PRODUCT_PACKAGES += \
-+android.hardware.drm@1.0-impl
-+
-+# GNSS HAL
-+PRODUCT_PACKAGES += \
-+    android.hardware.gnss@1.0-impl
-+
-+# HIDL
-+PRODUCT_COPY_FILES += \
-+$(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
-+
-+# Gatekeeper HAL
-+PRODUCT_PACKAGES += \
-+    android.hardware.gatekeeper@1.0-impl
-+# Keymaster
-+PRODUCT_PACKAGES += \
-+    android.hardware.keymaster@3.0-impl
- 
- # These are the hardware-specific features
- PRODUCT_COPY_FILES += \
-@@ -157,9 +209,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
- # Dalvik heap config
- include frameworks/native/build/phone-hdpi-512-dalvik-heap.mk
- 
--# Texture config.
--include frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
--
- $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
- $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
- 
- # RILD
--    service ril-daemon /system/bin/rild
-+    service ril-daemon /system/vendor/bin/hw/rild
-         class main
-         socket rild stream 660 root radio
-         socket rild1 stream 660 root radio
-@@ -515,7 +515,7 @@ on post-fs
-         user root
-         group radio cache inet misc audio system sdcard_rw log sdcard_r
- 
--    service wpa_supplicant /system/bin/wpa_supplicant \
-+    service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
-         -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-         -I/system/etc/wifi/wpa_supplicant_overlay.conf \
-         -e/data/misc/wifi/entropy.bin \
-
  }; // namespace android
