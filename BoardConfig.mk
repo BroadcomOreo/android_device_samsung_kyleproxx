@@ -143,9 +143,9 @@ MALLOC_SVELTE                               := true
 # Recovery
 # Compile with BUILD_TWRP=true when build TWRP recovery
 ifeq ($(BUILD_TWRP),true)
-    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/twrp.fstab.hawaii_ss_kyleprods
+    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/twrp.fstab.hawaii_ss_kyleproxx
 else
-    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleprods
+    TARGET_RECOVERY_FSTAB                   := device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleproxx
 endif
 TARGET_USE_CUSTOM_LUN_FILE_PATH             := /sys/class/android_usb/android0/f_mass_storage/lun/file
 TARGET_USERIMAGES_USE_EXT4                  := true
@@ -192,6 +192,7 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 # GPS
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 
-# SELinux
-#BOARD_SEPOLICY_DIRS += \
-#    device/samsung/kyleproxx/sepolicy
+# Seccomp policy
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy
+    
