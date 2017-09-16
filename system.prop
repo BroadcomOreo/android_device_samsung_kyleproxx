@@ -14,6 +14,7 @@ rild.libpath=/system/lib/libbrcm_ril.so
 ro.sf.lcd_density=240
 ro.lcd_brightness=160
 ro.lcd_min_brightness=10
+ro.sys.fw.bg_apps_limit=10
 
 # MultiTouch support
 ro.product.multi_touch_enabled=true
