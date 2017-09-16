@@ -26,7 +26,12 @@ on post-fs-data
     mkdir /data/log 0775 system log
     chown system log /data/log
     setprop vold.post_fs_data_done 1
-
+    
+# KSM
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
+    
     chmod 0777 /data/log
     chmod 0777 /data/anr
 
