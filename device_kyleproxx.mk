@@ -8,6 +8,10 @@ PRODUCT_AAPT_PREF_CONFIG := hdpi
 
 DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleproxx/overlay
 
+# I/O scheduler
+PRODUCT_PROPERTY_OVERRIDES += \
+    sys.io.scheduler=bfq
+
 # Init files
 PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleproxx:root/fstab.hawaii_ss_kyleproxx \
