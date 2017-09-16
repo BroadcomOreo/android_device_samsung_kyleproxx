@@ -45,6 +45,10 @@ else
 endif
 TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
 
+TARGET_USES_GRALLOC1                  := true
+TARGET_USES_HWC2                      := true
+TARGET_USES_NEW_ION_API               := true
+ 
 # Time
 BOARD_USES_QC_TIME_SERVICES := true
 WITH_LINEAGE_CHARGER := false
