@@ -12,6 +12,10 @@ DEVICE_PACKAGE_OVERLAYS += device/samsung/kyleproxx/overlay
 PRODUCT_PROPERTY_OVERRIDES += \
     sys.io.scheduler=bfq
 
+# KSM
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.ksm.default=1
+      
 # Init files
 PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/rootdir/fstab.hawaii_ss_kyleproxx:root/fstab.hawaii_ss_kyleproxx \
