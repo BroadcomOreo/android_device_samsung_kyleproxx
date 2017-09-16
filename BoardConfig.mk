@@ -18,6 +18,12 @@ TARGET_BOOTLOADER_BOARD_NAME                := hawaii
 #TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
 #TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
 
+ # Audio
+ AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+ AUDIO_FEATURE_ENABLED_SND_MONITOR := true
+ BOARD_USES_ALSA_AUDIO := true
+ BOARD_USES_GENERIC_AUDIO := true
+ 
 # Lights
 PRODUCT_PACKAGES += \
     lights.kyleproxx
