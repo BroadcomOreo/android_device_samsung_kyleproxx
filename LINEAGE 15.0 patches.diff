@@ -1,3 +1,30 @@
+diff -ur a/packages/apps/Dialer/InCallUI/src/com/android/incallui/CallCardPresenter.java b/packages/apps/Dialer/InCallUI/src/com/android/incallui/CallCardPresenter.java
+--- a/packages/apps/Dialer/InCallUI/src/com/android/incallui/CallCardPresenter.java	Wed Apr 20 08:50:20 2016
++++ b/packages/apps/Dialer/InCallUI/src/com/android/incallui/CallCardPresenter.java	Thu May 12 01:31:40 2016
+@@ -1190,21 +1190,7 @@
+     }
+ 
+     private boolean isVBAvailable() {
+-        if (mPrimary == null || mPrimary.getState() != Call.State.ACTIVE) {
+-            return false;
+-        }
+-
+-        int mode = AudioModeProvider.getInstance().getAudioMode();
+-        int settingsTtyMode = Settings.Secure.getInt(mContext.getContentResolver(),
+-                Settings.Secure.PREFERRED_TTY_MODE, TelecomManager.TTY_MODE_OFF);
+-
+-        if (mode != CallAudioState.ROUTE_EARPIECE
+-                && mode != CallAudioState.ROUTE_SPEAKER
+-                && settingsTtyMode != TelecomManager.TTY_MODE_HCO) {
+-            return false;
+-        }
+-
+-        return !TextUtils.isEmpty(mAudioManager.getParameters(VOLUME_BOOST_PARAMETER));
++        return false;
+     }
+ 
+     private boolean isVolumeBoostEnabled() {
+
 diff -ur a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java
 --- a/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java	Wed Apr 20 08:50:20 2016
 +++ b/packages/services/Telecomm/src/com/android/server/telecom/CallAudioModeStateMachine.java	Thu May 12 01:31:40 2016
