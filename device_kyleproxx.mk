@@ -31,9 +31,9 @@ PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/rootdir/check_variant.sh:install/bin/check_variant.sh
 
 # Insecure ADB
-ADDITIONAL_DEFAULT_PROPERTIES += \
-    ro.secure=0 \
-    ro.adb.secure=0 \
+#ADDITIONAL_DEFAULT_PROPERTIES += \
+#    ro.secure=0 \
+#    ro.adb.secure=0 \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -62,7 +62,8 @@ PRODUCT_PACKAGES += \
     libaudio-resampler \
     lights.hawaii \
     power.hawaii \
-    libstagefrighthw
+    libstagefrighthw \
+    healthd.hawaii
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -105,6 +106,34 @@ PRODUCT_PACKAGES += \
     libnetcmdiface \
     wpa_supplicant \
     wpa_supplicant.conf
+# HIDL
+PRODUCT_COPY_FILES += \
+    device/samsung/kyleproxx/manifest.xml:system/vendor/manifest.xml
+
+# HIDL
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    android.hardware.camera.provider@2.4-impl \
+    android.hardware.power@1.0-impl \
+    android.hardware.light@2.0-impl \
+    android.hardware.bluetooth@1.0-impl \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.memtrack@1.0-impl \
+    android.hardware.renderscript@1.0-impl 
+
+
+# Seccomp policy
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp_policy/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy   
+
+# Bluetooth
+PRODUCT_PACKAGES += \
+    libbt-vendor
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -165,9 +194,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Dalvik heap config
 include frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk
-
-# Texture config.
-include frameworks/native/build/phone-xxhdpi-2048-hwui-memory.mk
 
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/config/config-bcm.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)

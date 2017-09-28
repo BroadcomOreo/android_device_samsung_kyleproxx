@@ -15,8 +15,8 @@ ARCH_ARM_HAVE_VFP                           := true
 ARCH_ARM_HAVE_TLS_REGISTER                  := true
 ARCH_ARM_HAVE_NEON                          := true
 TARGET_BOOTLOADER_BOARD_NAME                := hawaii
-TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
-TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+#TARGET_GLOBAL_CFLAGS                        += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
+#TARGET_GLOBAL_CPPFLAGS                      += -mtune=cortex-a9 -mfpu=neon -mfloat-abi=softfp -O3 -funsafe-math-optimizations
 
 # Assert
 TARGET_OTA_ASSERT_DEVICE                    := kyleprods,kylepro,S7582,S7580,GT-S7582,GT-S7580,hawaii
@@ -49,7 +49,7 @@ TARGET_KERNEL_HAVE_NTFS                     := true
 # Partition size
 BOARD_BOOTIMAGE_PARTITION_SIZE              := 8388608
 # //Fake Values to workaround build
-BOARD_RECOVERYIMAGE_PARTITION_SIZE          := 10279424
+BOARD_RECOVERYIMAGE_PARTITION_SIZE          := 19279424
 # //
 BOARD_SYSTEMIMAGE_PARTITION_SIZE            := 1200283648
 BOARD_SYSTEMIMAGE_JOURNAL_SIZE              := 0
@@ -138,7 +138,6 @@ else
 endif
 TARGET_USE_CUSTOM_LUN_FILE_PATH             := /sys/class/android_usb/android0/f_mass_storage/lun/file
 TARGET_USERIMAGES_USE_EXT4                  := true
-TARGET_USERIMAGES_USE_F2FS                  := true
 TARGET_RECOVERY_PIXEL_FORMAT                := BGRA_8888
 BOARD_HAS_NO_MISC_PARTITION                 := true
 BOARD_RECOVERY_HANDLES_MOUNT                := true
@@ -175,6 +174,9 @@ BOARD_VOLD_MAX_PARTITIONS                   := 19
 # MTP
 BOARD_MTP_DEVICE                            := /dev/mtp_usb
 
+#packaging
+BLOCK_BASED_OTA                             := false
+
 # CMHW
 BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 
@@ -182,5 +184,5 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 
 # SELinux
-BOARD_SEPOLICY_DIRS += \
-    device/samsung/kyleproxx/sepolicy
+#BOARD_SEPOLICY_DIRS += \
+#    device/samsung/kyleproxx/sepolicy

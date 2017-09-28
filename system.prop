@@ -30,7 +30,13 @@ video.enc.h264.timing_thr0=295
 video.enc.h264.timing_thr1=215
 video.enc.h264.timing_thr2=145
 
+persist.media.treble_omx=false
+
 sf.metadata_use_plat_sw_codecs=1
 
 ro.ril.hsxpa=1
 ro.ril.gprsclass=10
+
+ro.secure=0
+ro.adb.secure=0
+
