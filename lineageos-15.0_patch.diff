@@ -1,0 +1,600 @@
+
+project build/make/
+diff --git a/core/main.mk b/core/main.mk
+index a490bb7c7..b25acd43b 100644
+--- a/core/main.mk
++++ b/core/main.mk
+@@ -172,7 +172,7 @@ $(info ************************************************************)
+ $(info You asked for an OpenJDK based build but your version is)
+ $(info $(java_version_str).)
+ $(info ************************************************************)
+-$(error stop)
++#$(error stop)
+ endif # java version is not OpenJdk
+ else # if requires_openjdk
+ ifneq ($(shell echo '$(java_version_str)' | grep -i openjdk),)
+
+project build/soong/
+diff --git a/cc/config/arm_device.go b/cc/config/arm_device.go
+index 1b60eae..c921fd3 100644
+--- a/cc/config/arm_device.go
++++ b/cc/config/arm_device.go
+@@ -118,6 +118,9 @@ var (
+ 		"cortex-a8": []string{
+ 			"-mcpu=cortex-a8",
+ 		},
++		"cortex-a9": []string{
++			"-mcpu=cortex-a9",
++		},
+ 		"cortex-a15": []string{
+ 			"-mcpu=cortex-a15",
+ 			// Fake an ARM compiler flag as these processors support LPAE which GCC/clang
+@@ -195,6 +198,7 @@ func init() {
+ 	pctx.StaticVariable("ArmGenericCflags", strings.Join(armCpuVariantCflags[""], " "))
+ 	pctx.StaticVariable("ArmCortexA7Cflags", strings.Join(armCpuVariantCflags["cortex-a7"], " "))
+ 	pctx.StaticVariable("ArmCortexA8Cflags", strings.Join(armCpuVariantCflags["cortex-a8"], " "))
++	pctx.StaticVariable("ArmCortexA9Cflags", strings.Join(armCpuVariantCflags["cortex-a9"], " "))
+ 	pctx.StaticVariable("ArmCortexA15Cflags", strings.Join(armCpuVariantCflags["cortex-a15"], " "))
+ 	pctx.StaticVariable("ArmKraitCflags", strings.Join(armCpuVariantCflags["krait"], " "))
+ 
+@@ -223,6 +227,8 @@ func init() {
+ 		strings.Join(armClangCpuVariantCflags["cortex-a7"], " "))
+ 	pctx.StaticVariable("ArmClangCortexA8Cflags",
+ 		strings.Join(armClangCpuVariantCflags["cortex-a8"], " "))
++	pctx.StaticVariable("ArmClangCortexA9Cflags",
++		strings.Join(armClangCpuVariantCflags["cortex-a9"], " "))
+ 	pctx.StaticVariable("ArmClangCortexA15Cflags",
+ 		strings.Join(armClangCpuVariantCflags["cortex-a15"], " "))
+ 	pctx.StaticVariable("ArmClangKraitCflags",
+@@ -240,6 +246,7 @@ var (
+ 		"":               "${config.ArmGenericCflags}",
+ 		"cortex-a7":      "${config.ArmCortexA7Cflags}",
+ 		"cortex-a8":      "${config.ArmCortexA8Cflags}",
++		"cortex-a9":      "${config.ArmCortexA9Cflags}",
+ 		"cortex-a15":     "${config.ArmCortexA15Cflags}",
+ 		"cortex-a53":     "${config.ArmCortexA7Cflags}",
+ 		"cortex-a53.a57": "${config.ArmCortexA7Cflags}",
+@@ -257,6 +264,7 @@ var (
+ 		"":               "${config.ArmClangGenericCflags}",
+ 		"cortex-a7":      "${config.ArmClangCortexA7Cflags}",
+ 		"cortex-a8":      "${config.ArmClangCortexA8Cflags}",
++		"cortex-a9":      "${config.ArmClangCortexA9Cflags}",
+ 		"cortex-a15":     "${config.ArmClangCortexA15Cflags}",
+ 		"cortex-a53":     "${config.ArmClangCortexA7Cflags}",
+ 		"cortex-a53.a57": "${config.ArmClangCortexA7Cflags}",
+
+project external/icu/
+diff --git a/icu4c/source/common/ucnv.c b/icu4c/source/common/ucnv.c
+index 527f86f14..8bf7609a1 100644
+--- a/icu4c/source/common/ucnv.c
++++ b/icu4c/source/common/ucnv.c
+@@ -2906,6 +2906,75 @@ ucnv_isFixedWidth(UConverter *cnv, UErrorCode *status){
+             return FALSE;
+     }
+ }
++U_CAPI void    U_EXPORT2 ucnv_setToUCallBack_48 (UConverter * converter,
++                            UConverterToUCallback newAction,
++                            const void* newContext,
++                            UConverterToUCallback *oldAction,
++                            const void** oldContext,
++                            UErrorCode * err) {
++  ucnv_setToUCallBack(converter, newAction, newContext,
++        oldAction, oldContext, err);
++}
++
++U_CAPI void  U_EXPORT2 ucnv_close_48 (UConverter * converter) {
++  ucnv_close (converter);
++}
++
++U_CAPI void  U_EXPORT2
++ucnv_setFromUCallBack_48 (UConverter * converter,
++                            UConverterFromUCallback newAction,
++                            const void* newContext,
++                            UConverterFromUCallback *oldAction,
++                            const void** oldContext,
++                            UErrorCode * err) {
++
++  ucnv_setFromUCallBack(converter, newAction, newContext, oldAction,
++        oldContext, err);
++}
++
++U_CAPI void U_EXPORT2
++ucnv_convertEx_48 (UConverter *targetCnv, UConverter *sourceCnv,
++               char **target, const char *targetLimit,
++               const char **source, const char *sourceLimit,
++               UChar *pivotStart, UChar **pivotSource,
++               UChar **pivotTarget, const UChar *pivotLimit,
++               UBool reset, UBool flush,
++               UErrorCode *pErrorCode) {
++  ucnv_convertEx(targetCnv, sourceCnv, target, targetLimit, source,
++        sourceLimit, pivotStart, pivotSource,
++        pivotTarget, pivotLimit, reset, flush,
++        pErrorCode);
++}
++
++U_CAPI UConverter* U_EXPORT2
++ucnv_open_48 (const char *name,
++                       UErrorCode * err) {
++  return ucnv_open(name, err);
++}
++
++U_STABLE void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP_48 (
++                  const void *context,
++                  UConverterFromUnicodeArgs *fromUArgs,
++                  const UChar* codeUnits,
++                  int32_t length,
++                  UChar32 codePoint,
++                  UConverterCallbackReason reason,
++                  UErrorCode * err) {
++  return UCNV_FROM_U_CALLBACK_STOP(context, fromUArgs, codeUnits,
++      length, codePoint, reason, err);
++}
++
++U_STABLE void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP_48 (
++                  const void *context,
++                  UConverterToUnicodeArgs *toUArgs,
++                  const char* codeUnits,
++                  int32_t length,
++                  UConverterCallbackReason reason,
++                  UErrorCode * err) {
++  return UCNV_TO_U_CALLBACK_STOP(context, toUArgs, codeUnits, length,
++      reason, err);
++}
++
+ #endif
+ 
+ /*
+
+project frameworks/av/
+diff --git a/media/libstagefright/foundation/Android.bp b/media/libstagefright/foundation/Android.bp
+index 9b2e7fa4b..a6d69a375 100644
+--- a/media/libstagefright/foundation/Android.bp
++++ b/media/libstagefright/foundation/Android.bp
+@@ -43,6 +43,7 @@ cc_library_shared {
+         "-Wno-multichar",
+         "-Werror",
+         "-Wall",
++        "-DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL",
+     ],
+     clang: true,
+     sanitize: {
+diff --git a/media/libstagefright/foundation/MediaBufferGroup.cpp b/media/libstagefright/foundation/MediaBufferGroup.cpp
+index cb62d9291..fdcce5fd2 100644
+--- a/media/libstagefright/foundation/MediaBufferGroup.cpp
++++ b/media/libstagefright/foundation/MediaBufferGroup.cpp
+@@ -138,6 +138,13 @@ bool MediaBufferGroup::has_buffers() {
+     return false;
+ }
+ 
++#ifdef ADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
++extern "C" status_t _ZN7android16MediaBufferGroup14acquire_bufferEPPNS_11MediaBufferE(
++    MediaBufferGroup* group, MediaBuffer **out) {
++    return group->acquire_buffer(out, false);
++}
++#endif
++
+ status_t MediaBufferGroup::acquire_buffer(
+         MediaBuffer **out, bool nonBlocking, size_t requestedSize) {
+     Mutex::Autolock autoLock(mLock);
+
+project frameworks/native/
+diff --git a/libs/binder/Parcel.cpp b/libs/binder/Parcel.cpp
+index aec8f107a..80d8f818c 100644
+--- a/libs/binder/Parcel.cpp
++++ b/libs/binder/Parcel.cpp
+@@ -541,7 +541,11 @@ status_t Parcel::appendFrom(const Parcel *parcel, size_t offset, size_t len)
+ 
+             flat_binder_object* flat
+                 = reinterpret_cast<flat_binder_object*>(mData + off);
++#ifndef DISABLE_ASHMEM_TRACKING
+             acquire_object(proc, *flat, this, &mOpenAshmemSize);
++#else
++            acquire_object(proc, *flat, this);
++#endif
+ 
+             if (flat->type == BINDER_TYPE_FD) {
+                 // If this is a file descriptor, we need to dup it so the
+@@ -1060,6 +1064,12 @@ status_t Parcel::writeString16(const String16& str)
+     return writeString16(str.string(), str.size());
+ }
+ 
++extern "C" status_t _ZN7android6Parcel13writeString16EPKDsj(void *parcel, const char16_t* str, size_t len);
++
++extern "C" status_t _ZN7android6Parcel13writeString16EPKtj(void *parcel, const char16_t* str, size_t len) {
++   return _ZN7android6Parcel13writeString16EPKDsj(parcel, str, len);
++}
++
+ status_t Parcel::writeString16(const char16_t* str, size_t len)
+ {
+     if (str == NULL) return writeInt32(-1);
+@@ -1321,7 +1331,11 @@ restart_write:
+         // Need to write meta-data?
+         if (nullMetaData || val.binder != 0) {
+             mObjects[mObjectsSize] = mDataPos;
++#ifndef DISABLE_ASHMEM_TRACKING
+             acquire_object(ProcessState::self(), val, this, &mOpenAshmemSize);
++#else
++            acquire_object(ProcessState::self(), val, this);
++#endif
+             mObjectsSize++;
+         }
+ 
+@@ -2417,7 +2431,11 @@ void Parcel::releaseObjects()
+         i--;
+         const flat_binder_object* flat
+             = reinterpret_cast<flat_binder_object*>(data+objects[i]);
++#ifndef DISABLE_ASHMEM_TRACKING
+         release_object(proc, *flat, this, &mOpenAshmemSize);
++#else
++        release_object(proc, *flat, this);
++#endif
+     }
+ }
+ 
+@@ -2431,7 +2449,11 @@ void Parcel::acquireObjects()
+         i--;
+         const flat_binder_object* flat
+             = reinterpret_cast<flat_binder_object*>(data+objects[i]);
++#ifndef DISABLE_ASHMEM_TRACKING
+         acquire_object(proc, *flat, this, &mOpenAshmemSize);
++#else
++        acquire_object(proc, *flat, this);
++#endif
+     }
+ }
+ 
+@@ -2622,7 +2644,11 @@ status_t Parcel::continueWrite(size_t desired)
+                     // will need to rescan because we may have lopped off the only FDs
+                     mFdsKnown = false;
+                 }
++#ifndef DISABLE_ASHMEM_TRACKING
+                 release_object(proc, *flat, this, &mOpenAshmemSize);
++#else
++                release_object(proc, *flat, this);
++#endif
+             }
+             binder_size_t* objects =
+                 (binder_size_t*)realloc(mObjects, objectsSize*sizeof(binder_size_t));
+@@ -2707,7 +2733,9 @@ void Parcel::initState()
+     mFdsKnown = true;
+     mAllowFds = true;
+     mOwner = NULL;
++#ifndef DISABLE_ASHMEM_TRACKING
+     mOpenAshmemSize = 0;
++#endif
+ 
+     // racing multiple init leads only to multiple identical write
+     if (gMaxFds == 0) {
+@@ -2742,12 +2770,20 @@ size_t Parcel::getBlobAshmemSize() const
+     // This used to return the size of all blobs that were written to ashmem, now we're returning
+     // the ashmem currently referenced by this Parcel, which should be equivalent.
+     // TODO: Remove method once ABI can be changed.
++#ifndef DISABLE_ASHMEM_TRACKING
+     return mOpenAshmemSize;
++#else
++    return 0;
++#endif
+ }
+ 
+ size_t Parcel::getOpenAshmemSize() const
+ {
++#ifndef DISABLE_ASHMEM_TRACKING
+     return mOpenAshmemSize;
++#else
++    return 0;
++#endif
+ }
+ 
+ // --- Parcel::Blob ---
+diff --git a/libs/binder/include/binder/Parcel.h b/libs/binder/include/binder/Parcel.h
+index 5d36526cb..2a6195d03 100644
+--- a/libs/binder/include/binder/Parcel.h
++++ b/libs/binder/include/binder/Parcel.h
+@@ -553,9 +553,10 @@ public:
+     public:
+         inline void* data() { return mData; }
+     };
+-
++#ifndef DISABLE_ASHMEM_TRACKING
+ private:
+     size_t mOpenAshmemSize;
++#endif
+ 
+ public:
+     // TODO: Remove once ABI can be changed.
+diff --git a/opengl/libs/EGL/eglApi.cpp b/opengl/libs/EGL/eglApi.cpp
+index ba3a5f91a..b46600f16 100644
+--- a/opengl/libs/EGL/eglApi.cpp
++++ b/opengl/libs/EGL/eglApi.cpp
+@@ -15,6 +15,7 @@
+  */
+ 
+ #define ATRACE_TAG ATRACE_TAG_GRAPHICS
++#define WORKAROUND_BUG_10194508
+ 
+ #include <ctype.h>
+ #include <dlfcn.h>
+@@ -503,6 +504,15 @@ EGLSurface eglCreateWindowSurface(  EGLDisplay dpy, EGLConfig config,
+ 
+         EGLint format;
+         android_dataspace dataSpace = HAL_DATASPACE_UNKNOWN;
++
++#ifdef WORKAROUND_BUG_10194508
++        if (!cnx->egl.eglGetConfigAttrib(iDpy, config, EGL_NATIVE_VISUAL_ID,
++                &format)) {
++            ALOGE("eglGetConfigAttrib(EGL_NATIVE_VISUAL_ID) failed: %#x",
++                    eglGetError());
++            format = 0;
++        }
++#else
+         EGLint a = 0;
+         EGLint r, g, b;
+         r = g = b = 0;
+@@ -537,6 +547,7 @@ EGLSurface eglCreateWindowSurface(  EGLDisplay dpy, EGLConfig config,
+                 format = HAL_PIXEL_FORMAT_RGBA_FP16;
+             }
+         }
++#endif
+ 
+         // now select a corresponding sRGB format if needed
+         if (attrib_list && dp->haveExtension("EGL_KHR_gl_colorspace")) {
+diff --git a/services/surfaceflinger/SurfaceFlinger_hwc1.cpp b/services/surfaceflinger/SurfaceFlinger_hwc1.cpp
+index cf5fe6379..625fc6a1f 100644
+--- a/services/surfaceflinger/SurfaceFlinger_hwc1.cpp
++++ b/services/surfaceflinger/SurfaceFlinger_hwc1.cpp
+@@ -3872,6 +3872,10 @@ status_t SurfaceFlinger::captureScreenImplLocked(
+         bool isLocalScreenshot)
+ {
+     ATRACE_CALL();
++// Rotation artifact problems when useReadPixels is false
++#ifdef HAWAII_HWC
++    useReadPixels = true;
++#endif
+ 
+     // get screen geometry
+     uint32_t hw_w = hw->getWidth();
+
+project hardware/broadcom/libbt/
+diff --git a/src/userial_vendor.c b/src/userial_vendor.c
+index 3ff518b..787490c 100644
+--- a/src/userial_vendor.c
++++ b/src/userial_vendor.c
+@@ -198,6 +198,10 @@ int userial_vendor_open(tUSERIAL_CFG *p_cfg)
+ 
+     vnd_userial.fd = -1;
+ 
++#if (BT_WAKE_VIA_USERIAL_IOCTL==TRUE)
++    int ldisc;
++#endif
++
+     if (!userial_to_tcio_baud(p_cfg->baud, &baud))
+     {
+         return -1;
+@@ -265,6 +269,13 @@ int userial_vendor_open(tUSERIAL_CFG *p_cfg)
+     tcsetattr(vnd_userial.fd, TCSANOW, &vnd_userial.termios);
+ 
+ #if (BT_WAKE_VIA_USERIAL_IOCTL==TRUE)
++    // TODO: check for breakage on tuna (Galaxy Nexus). It defines this,
++    //       but does not contain the kernel code to support it.
++
++    // Switch to N_BRCM_HCI line disclipline for ioctl to work
++    ldisc = 25; // N_BRCM_HCI
++    ioctl(vnd_userial.fd, TIOCSETD, &ldisc);
++
+     userial_ioctl_init_bt_wake(vnd_userial.fd);
+ #endif
+ 
+
+project system/core/
+diff --git a/init/init.cpp b/init/init.cpp
+index bb6355ae3..2dfe87fea 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -541,7 +541,7 @@ static void selinux_init_all_handles(void)
+ enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
+ 
+ static selinux_enforcing_status selinux_status_from_cmdline() {
+-    selinux_enforcing_status status = SELINUX_ENFORCING;
++    selinux_enforcing_status status = SELINUX_PERMISSIVE;
+ 
+     import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
+         if (key == "androidboot.selinux" && value == "permissive") {
+diff --git a/init/service.cpp b/init/service.cpp
+index 00599bbf9..b8b3f88ab 100644
+--- a/init/service.cpp
++++ b/init/service.cpp
+@@ -80,10 +80,13 @@ static std::string ComputeContextFromExecutable(std::string& service_name,
+     }
+     if (rc == 0 && computed_context == mycon.get()) {
+         LOG(ERROR) << "service " << service_name << " does not have a SELinux domain defined";
++/*
+         if (selinux_status_getenforce() > 0) {
+             return "";
+         }
++*/
+     }
++
+     if (rc < 0) {
+         LOG(ERROR) << "could not get context while starting '" << service_name << "'";
+         return "";
+diff --git a/libcutils/Android.bp b/libcutils/Android.bp
+index 513736d62..6ebff2627 100644
+--- a/libcutils/Android.bp
++++ b/libcutils/Android.bp
+@@ -53,6 +53,7 @@ cc_library {
+     vendor_available: true,
+     host_supported: true,
+     srcs: [
++        "atomic.c",
+         "config_utils.c",
+         "fs_config.c",
+         "canned_fs_config.c",
+diff --git a/libnetutils/ifc_utils.c b/libnetutils/ifc_utils.c
+index a098d596e..84e726498 100644
+--- a/libnetutils/ifc_utils.c
++++ b/libnetutils/ifc_utils.c
+@@ -725,3 +725,19 @@ ifc_configure(const char *ifname,
+ 
+     return 0;
+ }
++
++// Required for Broadcom RILD
++int ifc_set_mtu(const char *name, int mtuSz)
++{
++    struct ifreq ifr;
++    int ret;
++    ifc_init_ifr(name, &ifr);
++    ifr.ifr_mtu = mtuSz;
++
++    ret = ioctl(ifc_ctl_sock, SIOCSIFMTU, &ifr);
++    if (ret < 0) {
++        printerr("ifc_set_mtu: SIOCSIFMTU failed: %d\n", ret);
++    }
++
++    return ret;
++}
+diff --git a/libutils/RefBase.cpp b/libutils/RefBase.cpp
+index 24737b985..bc82610a4 100644
+--- a/libutils/RefBase.cpp
++++ b/libutils/RefBase.cpp
+@@ -737,6 +737,13 @@ void RefBase::onLastWeakRef(const void* /*id*/)
+ 
+ // ---------------------------------------------------------------------------
+ 
++#ifdef REFBASE_JB_MR1_COMPAT_SYMBOLS
++extern "C" void _ZN7android7RefBase14moveReferencesEPvPKvjRKNS_22ReferenceConverterBaseE(void* /*dst*/, void const* /*src*/, size_t /*n*/,
++        const ReferenceConverterBase& /*caster*/)
++{
++}
++#endif
++
+ #if DEBUG_REFS
+ void RefBase::renameRefs(size_t n, const ReferenceRenamer& renamer) {
+     for (size_t i=0 ; i<n ; i++) {
+diff --git a/libutils/VectorImpl.cpp b/libutils/VectorImpl.cpp
+index ef3277f42..c95e9b544 100644
+--- a/libutils/VectorImpl.cpp
++++ b/libutils/VectorImpl.cpp
+@@ -556,6 +556,17 @@ void VectorImpl::_do_move_backward(void* dest, const void* from, size_t num) con
+     do_move_backward(dest, from, num);
+ }
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++void VectorImpl::reservedVectorImpl1() { }
++void VectorImpl::reservedVectorImpl2() { }
++void VectorImpl::reservedVectorImpl3() { }
++void VectorImpl::reservedVectorImpl4() { }
++void VectorImpl::reservedVectorImpl5() { }
++void VectorImpl::reservedVectorImpl6() { }
++void VectorImpl::reservedVectorImpl7() { }
++void VectorImpl::reservedVectorImpl8() { }
++#endif
++
+ /*****************************************************************************/
+ 
+ SortedVectorImpl::SortedVectorImpl(size_t itemSize, uint32_t flags)
+@@ -675,6 +686,17 @@ ssize_t SortedVectorImpl::remove(const void* item)
+     return i;
+ }
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++void SortedVectorImpl::reservedSortedVectorImpl1() { };
++void SortedVectorImpl::reservedSortedVectorImpl2() { };
++void SortedVectorImpl::reservedSortedVectorImpl3() { };
++void SortedVectorImpl::reservedSortedVectorImpl4() { };
++void SortedVectorImpl::reservedSortedVectorImpl5() { };
++void SortedVectorImpl::reservedSortedVectorImpl6() { };
++void SortedVectorImpl::reservedSortedVectorImpl7() { };
++void SortedVectorImpl::reservedSortedVectorImpl8() { };
++#endif
++
+ /*****************************************************************************/
+ 
+ }; // namespace android
+diff --git a/libutils/include/utils/RefBase.h b/libutils/include/utils/RefBase.h
+index 223b6669d..3ead80e77 100644
+--- a/libutils/include/utils/RefBase.h
++++ b/libutils/include/utils/RefBase.h
+@@ -209,6 +209,15 @@ inline bool operator _op_ (const U* o) const {                  \
+ 
+ // ---------------------------------------------------------------------------
+ 
++#ifdef REFBASE_JB_MR1_COMPAT_SYMBOLS
++class ReferenceConverterBase {
++public:
++    virtual size_t getReferenceTypeSize() const = 0;
++    virtual void* getReferenceBase(void const*) const = 0;
++    inline virtual ~ReferenceConverterBase() { }
++};
++#endif
++
+ // RefererenceRenamer is pure abstract, there is no virtual method
+ // implementation to put in a translation unit in order to silence the
+ // weak vtables warning.
+diff --git a/libutils/include/utils/VectorImpl.h b/libutils/include/utils/VectorImpl.h
+index 4dd91fd29..29d69d87e 100644
+--- a/libutils/include/utils/VectorImpl.h
++++ b/libutils/include/utils/VectorImpl.h
+@@ -105,7 +105,19 @@ protected:
+     virtual void            do_splat(void* dest, const void* item, size_t num) const = 0;
+     virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
+     virtual void            do_move_backward(void* dest, const void* from, size_t num) const = 0;
+-    
++
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++    // take care of FBC...
++    virtual void            reservedVectorImpl1();
++    virtual void            reservedVectorImpl2();
++    virtual void            reservedVectorImpl3();
++    virtual void            reservedVectorImpl4();
++    virtual void            reservedVectorImpl5();
++    virtual void            reservedVectorImpl6();
++    virtual void            reservedVectorImpl7();
++    virtual void            reservedVectorImpl8();
++#endif
++
+ private:
+         void* _grow(size_t where, size_t amount);
+         void  _shrink(size_t where, size_t amount);
+@@ -156,6 +168,18 @@ public:
+ protected:
+     virtual int             do_compare(const void* lhs, const void* rhs) const = 0;
+ 
++#ifdef NEEDS_VECTORIMPL_SYMBOLS
++    // take care of FBC...
++    virtual void            reservedSortedVectorImpl1();
++    virtual void            reservedSortedVectorImpl2();
++    virtual void            reservedSortedVectorImpl3();
++    virtual void            reservedSortedVectorImpl4();
++    virtual void            reservedSortedVectorImpl5();
++    virtual void            reservedSortedVectorImpl6();
++    virtual void            reservedSortedVectorImpl7();
++    virtual void            reservedSortedVectorImpl8();
++#endif
++
+ private:
+             ssize_t         _indexOrderOf(const void* item, size_t* order = 0) const;
+ 
+
+project vendor/samsung/kyleproxx/
+diff --git a/kyleproxx-common-vendor-blobs.mk b/kyleproxx-common-vendor-blobs.mk
+index c6b9ddc..407bbb0 100644
+--- a/kyleproxx-common-vendor-blobs.mk
++++ b/kyleproxx-common-vendor-blobs.mk
+@@ -39,7 +39,7 @@ PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/proprietary/etc/wifi/bcmdhd_sta.bin:/system/etc/wifi/bcmdhd_sta.bin \
+     $(LOCAL_PATH)/proprietary/etc/wifi/nvram_mfg.txt:/system/etc/wifi/nvram_mfg.txt \
+     $(LOCAL_PATH)/proprietary/etc/wifi/nvram_net.txt:/system/etc/wifi/nvram_net.txt \
+-    $(LOCAL_PATH)/proprietary/etc/wifi/wpa_supplicant.conf:/system/etc/wifi/wpa_supplicant.conf \
++    $(LOCAL_PATH)/proprietary/etc/wifi/wpa_supplicant.conf:/system/vendor/etc/wifi/wpa_supplicant.conf \
+     $(LOCAL_PATH)/proprietary/lib/egl/libGLES_hawaii.so:/system/lib/egl/libGLES_hawaii.so \
+     $(LOCAL_PATH)/proprietary/lib/hw/acoustics.default.so:/system/lib/hw/acoustics.default.so \
+     $(LOCAL_PATH)/proprietary/lib/hw/alsa.default.so:/system/lib/hw/alsa.default.so \
+@@ -56,6 +56,7 @@ PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/proprietary/lib/libBrcmOMX_Core.so:/system/lib/libBrcmOMX_Core.so \
+     $(LOCAL_PATH)/proprietary/lib/libFraunhoferAAC.so:/system/lib/libFraunhoferAAC.so \
+     $(LOCAL_PATH)/proprietary/lib/libISP.so:/system/lib/libISP.so \
++    $(LOCAL_PATH)/proprietary/lib/libstlport.so:/system/vendor/lib/libstlport.so \
+     $(LOCAL_PATH)/proprietary/lib/libOMX.brcm.audio.aac.decoder.so:/system/lib/libOMX.brcm.audio.aac.decoder.so \
+     $(LOCAL_PATH)/proprietary/lib/libOMX.brcm.audio.aac.encoder.so:/system/lib/libOMX.brcm.audio.aac.encoder.so \
+     $(LOCAL_PATH)/proprietary/lib/libOMX.brcm.audio.amrnb.decoder.so:/system/lib/libOMX.brcm.audio.amrnb.decoder.so \
