@@ -26,6 +26,7 @@ BOARD_MKBOOTIMG_ARGS                        := --kernel_offset 0x00008000 --ramd
 BOARD_KERNEL_BASE                           := 0x82000000
 BOARD_KERNEL_PAGESIZE                       := 4096
 BOARD_KERNEL_OFFSET                         := 0x00008000
+BOARD_KERNEL_IMAGE_NAME                     := zImage
 BOARD_RAMDISK_OFFSET                        := 0x01000000
 BOARD_KERNEL_TAGS_OFFSET                    := 0x00000100
 ifeq ($(BUILD_TWRP),true)
