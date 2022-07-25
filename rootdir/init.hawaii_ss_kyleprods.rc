@@ -49,6 +49,21 @@ service logcat_debug /system/bin/logcat -b all -f /data/logcat.txt -v threadtime
     chmod 0664 /efs/wifi/.mac.info
     chown system system /efs/imei/.nvmac.info
     chmod 0664 /efs/imei/.nvmac.info
+    
+    # for WIFI TRP/TIS
+    write /data/.psm.info 0
+    chown system root /data/.psm.info
+    chmod 0664 /data/.psm.info
+
+    # for WIFI Version
+    write /data/.wifiver.info 0
+    chown system root /data/.wifiver.info
+    chmod 0666 /data/.wifiver.info
+
+    # for WIFI MAC address
+    write /data/.mac.info 0
+    chown system root /data/.mac.info
+    chmod 0664 /data/.mac.info
 
 # Permissions for bluetooth.
     setprop ro.bt.bdaddr_path "/efs/bluetooth/bt_addr"
@@ -150,6 +165,8 @@ on boot
 
 # WIFI
     setprop wifi.interface wlan0
+# Wifi firmware reload path
+    chown wifi wifi /sys/module/dhd/parameters/firmware_path
 
     symlink /dev/block/mmcblk0p11 /dev/block/param
 
