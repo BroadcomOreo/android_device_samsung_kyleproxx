@@ -106,6 +106,9 @@ PRODUCT_PACKAGES += \
     libnetcmdiface \
     wpa_supplicant \
     wpa_supplicant.conf
+    android.hardware.wifi@1.0-service \
+    wificond \
+    
 # HIDL
 PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/manifest.xml:system/vendor/manifest.xml
