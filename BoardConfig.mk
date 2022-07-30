@@ -195,6 +195,10 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 # GPS
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 
+# Shims
+TARGET_LD_SHIM_LIBS := \
+     /system/lib/hw/audio.primary.hawaii.so|libsamsung_symbols.so
+
 # SELinux
 #BOARD_SEPOLICY_DIRS += \
 #    device/samsung/kyleproxx/sepolicy
