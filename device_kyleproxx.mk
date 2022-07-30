@@ -90,6 +90,10 @@ PRODUCT_PACKAGES += \
 # Widevine
 PRODUCT_PACKAGES += \
     libshim_wvm
+	
+# Missing Symbols
+PRODUCT_PACKAGES += \
+    libsamsung_symbols	
 
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
