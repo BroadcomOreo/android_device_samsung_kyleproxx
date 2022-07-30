@@ -14,7 +14,8 @@ PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/rootdir/init.hawaii_ss_kyleprods.rc:root/init.hawaii_ss_kyleprods.rc \
     device/samsung/kyleproxx/rootdir/init.bcm2166x.usb.rc:root/init.bcm2166x.usb.rc \
     device/samsung/kyleproxx/rootdir/init.log.rc:root/init.log.rc \
-    device/samsung/kyleproxx/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc
+    device/samsung/kyleproxx/rootdir/ueventd.hawaii_ss_kyleprods.rc:root/ueventd.hawaii_ss_kyleprods.rc \
+	device/samsung/kyleproxx/rootdir/libstlport.so:system/lib/libstlport.so
 
 # Google's Software Decoder.
 PRODUCT_COPY_FILES += \
