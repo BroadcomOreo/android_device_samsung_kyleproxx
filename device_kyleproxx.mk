@@ -110,9 +110,9 @@ PRODUCT_PACKAGES += \
     hostapd \
     libnetcmdiface \
     wpa_supplicant \
-    wpa_supplicant.conf
+    wpa_supplicant.conf \
     android.hardware.wifi@1.0-service \
-    wificond \
+    wificond
     
 # HIDL
 PRODUCT_COPY_FILES += \
