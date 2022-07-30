@@ -9,6 +9,7 @@ on early-init
 
 on init
     export LD_SHIM_LIBS "/system/lib/libwvm.so|libshim_wvm.so"
+    export LD_PRELOAD "/system/lib/libsamsung_symbols.so"
     mkdir /tmp
     mount tmpfs tmpfs /tmp
     chmod 1775 /tmp
