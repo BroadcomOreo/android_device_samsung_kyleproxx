@@ -195,12 +195,11 @@ BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 # GPS
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 
-# Shims
-TARGET_LD_SHIM_LIBS := \
-     /system/lib/hw/audio.primary.hawaii.so|libsamsung_symbols.so \
-     /system/lib/hw/gralloc.hawaii.so|libsamsung_symbols.so \
-     /system/lib/egl/libGLES_hawaii.so|libsamsung_symbols.so \
-     /system/lib/egl/camera.hawaii.so|libsamsung_symbols.so
+# Include symbols
+LINKER_FORCED_SHIM_LIBS := /system/lib/hw/gralloc.hawaii.so|libatomicshim.so
+LINKER_FORCED_SHIM_LIBS := /system/lib/egl/libGLES_hawaii.so|libatomicshim.so
+LINKER_FORCED_SHIM_LIBS := /system/lib/hw/camera.hawaii.so|libsamsung_symbols.so
+LINKER_FORCED_SHIM_LIBS := /system/lib/hw/audio.primary.hawaii.so|libsamsung_symbols.so \
 
 # SELinux
 #BOARD_SEPOLICY_DIRS += \

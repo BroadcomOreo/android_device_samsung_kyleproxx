@@ -15,9 +15,6 @@
  */
  
 #include <stdint.h>
-#include <string>
-#define ANDROID_ATOMIC_INLINE
-#include <cutils/atomic.h>
 
 /* status_t VectorImpl::reservedVectorImpl */
 extern "C" int _ZN7android10VectorImpl19reservedVectorImpl1Ev();
