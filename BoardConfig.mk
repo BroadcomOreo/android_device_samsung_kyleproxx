@@ -206,4 +206,4 @@ TARGET_LD_SHIM_LIBS := \
 
 # SELinux
 #BOARD_SEPOLICY_DIRS += \
-#    device/samsung/kyleproxx/sepolicy
+    device/samsung/kyleproxx/sepolicy
