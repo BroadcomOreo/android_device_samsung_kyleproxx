@@ -94,7 +94,8 @@ PRODUCT_PACKAGES += \
 	
 # Missing Symbols
 PRODUCT_PACKAGES += \
-    libsamsung_symbols	
+    libsamsung_symbols \
+	libatomicshim
 
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
