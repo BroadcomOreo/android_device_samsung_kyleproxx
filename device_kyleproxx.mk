@@ -95,7 +95,7 @@ PRODUCT_PACKAGES += \
 # Missing Symbols
 PRODUCT_PACKAGES += \
     libsamsung_symbols \
-	libatomicshim
+	libatomicshim \
 	libcamerashim
 
 # KSM
