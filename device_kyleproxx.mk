@@ -96,6 +96,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libsamsung_symbols \
 	libatomicshim
+	libcamerashim
 
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
