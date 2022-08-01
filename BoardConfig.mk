@@ -197,6 +197,7 @@ TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 
 # Include symbols
 LINKER_FORCED_SHIM_LIBS := /system/lib/hw/gralloc.hawaii.so|libatomicshim.so
+LINKER_FORCED_SHIM_LIBS := /system/lib/hw/camera.hawaii.so|libatomicshim.so
 LINKER_FORCED_SHIM_LIBS := /system/lib/egl/libGLES_hawaii.so|libatomicshim.so
 LINKER_FORCED_SHIM_LIBS := /system/lib/hw/camera.hawaii.so|libsamsung_symbols.so
 LINKER_FORCED_SHIM_LIBS := /system/lib/hw/audio.primary.hawaii.so|libsamsung_symbols.so \
