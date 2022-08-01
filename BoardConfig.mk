@@ -199,9 +199,9 @@ TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include
 TARGET_LD_SHIM_LIBS := \
      /system/lib/egl/libGLES_hawaii.so|libatomicshim.so \
      /system/lib/hw/gralloc.hawaii.so|libatomicshim.so \
-     /system/lib/hw/camera.hawaii.so|libatomicshim.so \
+     /system/lib/hw/camera.hawaii.so|libcamerashim.so \
      /system/lib/hw/audio.primary.hawaii.so|libsamsung_symbols.so \
-     /system/vendor/lib/hw/camera.hawaii.so|libsamsung_symbols.so \
+
 
 # SELinux
 #BOARD_SEPOLICY_DIRS += \
