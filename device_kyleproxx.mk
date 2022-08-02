@@ -109,6 +109,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Wi-Fi
 PRODUCT_PACKAGES += \
     macloader \
+    wifiloader \
     hostapd \
     libnetcmdiface \
     wpa_supplicant \
