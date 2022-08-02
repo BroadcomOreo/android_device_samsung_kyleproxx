@@ -40,7 +40,7 @@
 # System files
 #
 /system/bin/bkmgrd                              u:object_r:bkmgrd_exec:s0
-/system/bin/glgps                               u:object_r:gpsd_exec:s0
+#/system/bin/glgps                               u:object_r:gpsd_exec:s0
 /system/bin/immvibed                            u:object_r:immvibed_exec:s0
 /system/bin/macloader                           u:object_r:macloader_exec:s0
 /system/bin/setup_fs                            u:object_r:setup_fs_exec:s0
@@ -52,12 +52,12 @@
 #
 /data/.psm.info                                 u:object_r:wifi_data_file:s0
 /data/misc/radio(/.*)?                          u:object_r:ril_db_file:s0
-/data/.gps.interface.pipe.to_gpsd               u:object_r:gps_data_file:s0
-/data/.gps.interface.pipe.to_jni                u:object_r:gps_data_file:s0
-/data/.gpsd.lock                                u:object_r:gps_data_file:s0
-/data/glgpsctrl                                 u:object_r:gps_data_file:s0
-/data/lto2.dat                                  u:object_r:gps_data_file:s0
-/data/ltoStatus.txt                             u:object_r:gps_data_file:s0
+#/data/.gps.interface.pipe.to_gpsd               u:object_r:gps_data_file:s0
+#/data/.gps.interface.pipe.to_jni                u:object_r:gps_data_file:s0
+#/data/.gpsd.lock                                u:object_r:gps_data_file:s0
+#/data/glgpsctrl                                 u:object_r:gps_data_file:s0
+#/data/lto2.dat                                  u:object_r:gps_data_file:s0
+#/data/ltoStatus.txt                             u:object_r:gps_data_file:s0
 /data/atx/bkmgrdlock                            u:object_r:radio_data_file:s0
 /data/ipccp.bin                                 u:object_r:radio_data_file:s0
 
