@@ -1,6 +1,8 @@
 [
     {
-        "repository": "android_hardware_samsung",
-        "target_path": "hardware/samsung"
+    "remote": "github",
+    "repository": "LineageOS/android_hardware_samsung",
+    "target_path": "hardware/samsung",
+    "revision": "lineage-15.1"
     }
 ]
