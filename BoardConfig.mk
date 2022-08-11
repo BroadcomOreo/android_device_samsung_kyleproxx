@@ -189,6 +189,9 @@ BOARD_MTP_DEVICE                            := /dev/mtp_usb
 #packaging
 BLOCK_BASED_OTA                             := false
 
+#legacy adb support
+TARGET_USES_LEGACY_ADB_INTERFACE := true
+
 # CMHW
 BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
 
