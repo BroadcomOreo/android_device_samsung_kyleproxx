@@ -92,7 +92,7 @@ WIFI_DRIVER_FW_PATH_PARAM                   := "/sys/module/dhd/parameters/firmw
 WIFI_DRIVER_FW_PATH_STA                     := "/system/etc/wifi/bcmdhd_sta.bin"
 WIFI_DRIVER_FW_PATH_AP                      := "/system/etc/wifi/bcmdhd_apsta.bin"
 WIFI_DRIVER_FW_PATH_P2P                     := "/system/etc/wifi/bcmdhd_p2p.bin"
-WIFI_DRIVER_MODULE_PATH                     := "/system/lib/modules/dhd.ko"
+WIFI_DRIVER_MODULE_PATH                     := "/system/vendor/lib/modules/dhd.ko"
 WIFI_DRIVER_MODULE_NAME                     := "dhd"
 WIFI_DRIVER_MODULE_ARG                      := "firmware_path=/system/etc/wifi/bcmdhd_sta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
 WIFI_DRIVER_MODULE_AP_ARG                   := "firmware_path=/system/etc/wifi/bcmdhd_apsta.bin nvram_path=/system/etc/wifi/nvram_net.txt"
@@ -132,7 +132,7 @@ BOARD_HAL_STATIC_LIBRARIES                  := libhealthd.hawaii
 
 # RIL
 BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx/ril/
-BOARD_GLOBAL_CFLAGS                         += -DDISABLE_ASHMEM_TRACKING
+TARGET_DISABLE_ASHMEM_TRACKING              := true
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
@@ -190,7 +190,7 @@ BOARD_MTP_DEVICE                            := /dev/mtp_usb
 BLOCK_BASED_OTA                             := false
 
 # CMHW
-BOARD_HARDWARE_CLASS                        := hardware/samsung/cmhw/
+BOARD_HARDWARE_CLASS                        := hardware/samsung/lineagehw/
 
 # GPS
 TARGET_SPECIFIC_HEADER_PATH                 := device/samsung/kyleproxx/include

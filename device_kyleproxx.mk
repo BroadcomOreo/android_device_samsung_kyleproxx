@@ -136,6 +136,11 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.memtrack@1.0-impl \
     android.hardware.renderscript@1.0-impl 
+	
+	# Camera HAL
+PRODUCT_PACKAGES += \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    android.hardware.camera.device@1.0-impl-legacy
 
 
 # Seccomp policy
