@@ -76,10 +76,6 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes
 
-# Snap Camera
-PRODUCT_PACKAGES += \
-    Snap
-
 # Gello Browser
 PRODUCT_PACKAGES += \
     Gello
@@ -126,7 +122,6 @@ PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.audio@2.0-impl \
     android.hardware.audio.effect@2.0-impl \
-    android.hardware.camera.provider@2.4-impl \
     android.hardware.power@1.0-impl \
     android.hardware.light@2.0-impl \
     android.hardware.bluetooth@1.0-impl \
@@ -136,12 +131,6 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.memtrack@1.0-impl \
     android.hardware.renderscript@1.0-impl 
-	
-	# Camera HAL
-PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl-legacy \
-    android.hardware.camera.device@1.0-impl-legacy
-
 
 # Seccomp policy
 PRODUCT_COPY_FILES += \
