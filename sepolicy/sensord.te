@@ -14,3 +14,4 @@ allow sensord system_data_file:file { setattr };
 allow sensord sysfs:file { read };
 allow sensord sysfs:file { open };
 allow sensord sysfs:file { write };
+allow sensord system_data_file:fifo_file { create };
