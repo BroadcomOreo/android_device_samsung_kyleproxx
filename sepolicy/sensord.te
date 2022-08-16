@@ -3,3 +3,14 @@ type sensord, domain;
 type sensord_exec, file_type, exec_type;
 
 init_daemon_domain(sensord)
+
+allow sensord system_data_file:dir { write };
+allow sensord system_data_file:dir { add_name };
+allow sensord system_data_file:dir { create };
+allow sensord system_data_file:dir { setattr };
+allow sensord system_data_file:file { create };
+allow sensord system_data_file:file { read write open };
+allow sensord system_data_file:file { setattr };
+allow sensord sysfs:file { read };
+allow sensord sysfs:file { open };
+allow sensord sysfs:file { write };
