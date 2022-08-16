@@ -1,0 +1,3 @@
+allow bluetooth serial_device:chr_file { read write };
+allow bluetooth serial_device:chr_file { open };
+allow bluetooth serial_device:chr_file { ioctl };
