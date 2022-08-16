@@ -1,0 +1,3 @@
+allow toolbox block_device:blk_file { read write };
+allow toolbox block_device:blk_file { open };
+allow toolbox block_device:blk_file { getattr };
