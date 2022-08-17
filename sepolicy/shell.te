@@ -1,1 +1,1 @@
-allow shell hci_attach_dev:chr_file { ioctl read };
+allow shell hci_attach_dev:chr_file { ioctl };
