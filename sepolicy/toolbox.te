@@ -1,2 +1,3 @@
 #============= toolbox ==============
 allow toolbox block_device:blk_file { getattr };
+allow toolbox block_device:blk_file { open read };
