@@ -1,1 +1,2 @@
 allow bluetooth serial_device:chr_file { ioctl open read };
+allow bluetooth serial_device:chr_file write;
