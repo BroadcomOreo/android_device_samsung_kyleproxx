@@ -1,1 +1,2 @@
-allow netd netd:capability { sys_module };
+#============= netd ==============
+allow netd netd:capability sys_module;
