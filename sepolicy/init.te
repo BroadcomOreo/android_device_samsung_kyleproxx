@@ -23,4 +23,4 @@ allow init self:capability sys_module; # TODO: want sys_ptrace too
 allow init logd:dir getattr;
 allow init block_device:blk_file write;
 allow init hci_attach_dev:chr_file { ioctl read };
-allow init vendor_file:file execute_no_trans;
+#allow init vendor_file:file execute_no_trans;
