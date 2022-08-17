@@ -13,7 +13,4 @@ allow rild storage_file:dir search;
 allow rild proc:file write;
 
 allow rild toolbox_exec:file { execute execute_no_trans getattr open read };
-allow rild system_data_file:fifo_file { create };
-allow rild system_data_file:fifo_file { setattr };
-allow rild system_data_file:fifo_file { write };
-allow rild system_data_file:fifo_file { open };
+allow rild system_data_file:fifo_file { create open setattr write };
