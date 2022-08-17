@@ -1,3 +1,5 @@
 #============= logpersist ==============
 allow logpersist system_data_file:dir { open read };
 allow logpersist system_data_file:file { getattr open read };
+allow logpersist system_data_file:dir { add_name write };
+allow logpersist system_data_file:file { add_name append create write };
