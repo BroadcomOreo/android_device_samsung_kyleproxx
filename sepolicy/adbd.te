@@ -1,0 +1,2 @@
+#============= adbd ==============
+allow adbd device:chr_file read;
