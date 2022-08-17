@@ -4,7 +4,7 @@ type sensord_exec, file_type, exec_type;
 
 init_daemon_domain(sensord)
 
-allow sensord system_data_file:dir { add_name create setattr write };
+allow sensord system_data_file:dir { create setattr write };
 allow sensord system_data_file:fifo_file create;
 allow sensord sysfs:file { open read write };
-allow sensord system_data_file:file { add_name create read setattr write };
+allow sensord system_data_file:file { create read setattr write };
