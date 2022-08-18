@@ -3,3 +3,4 @@ allow logpersist system_data_file:dir { open read };
 allow logpersist system_data_file:file { getattr open read };
 allow logpersist system_data_file:dir { write };
 allow logpersist system_data_file:file { append create write };
+allow logpersist system_data_file:dir add_name;
