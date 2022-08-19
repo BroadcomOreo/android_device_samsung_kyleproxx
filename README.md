@@ -80,3 +80,6 @@ mmcblk0p19: 00470000 00000400 "userdata"
   - The CyanogenMod Team
   - TheNikiz
   - Zim555
+
+
+Progress: Bluetooth works now.
