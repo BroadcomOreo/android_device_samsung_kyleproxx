@@ -12,3 +12,4 @@ allow sensord system_data_file:fifo_file read;
 allow sensord system_data_file:file { create read setattr write };
 allow sensord system_data_file:dir add_name;
 allow sensord system_data_file:file { add_name open };
+allow sensord system_data_file:fifo_file { open write };
