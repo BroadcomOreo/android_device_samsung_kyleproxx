@@ -39,4 +39,6 @@ ro.ril.gprsclass=10
 
 ro.secure=0
 ro.adb.secure=0
-
+ro.debuggable=1
+persist.service.adb.enable=1
+ro.egl.destroy_after_detach=true
