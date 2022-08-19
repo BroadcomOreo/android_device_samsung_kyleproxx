@@ -133,6 +133,7 @@ BOARD_HAL_STATIC_LIBRARIES                  := libhealthd.hawaii
 # RIL
 BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx/ril/
 BOARD_PROVIDES_LIBRIL                       := true
+BOARD_PROVIDES_RILD                         := true
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
