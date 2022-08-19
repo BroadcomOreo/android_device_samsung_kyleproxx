@@ -63,7 +63,17 @@ on post-fs-data
     write /data/.psm.info 1
     chown system root /data/.psm.info
     chmod 0660 /data/.psm.info
-
+    
+    # for WIFI Version
+    write /data/.wifiver.info 0
+    chown system root /data/.wifiver.info
+    chmod 0666 /data/.wifiver.info
+    
+    # for WIFI MAC address
+    write /data/.mac.info 0
+    chown system root /data/.mac.info
+    chmod 0664 /data/.mac.info
+    
     chown system system /sys/class/backlight/panel/brightness
     chmod 0660 /sys/class/backlight/panel/brightness
 
