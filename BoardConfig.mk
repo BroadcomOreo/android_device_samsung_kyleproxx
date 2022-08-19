@@ -136,6 +136,7 @@ BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
 TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES  := true
+TARGET_USES_MEDIA_EXTENSIONS := true
 
 # ADB
 TARGET_USES_LEGACY_ADB_INTERFACE := true
