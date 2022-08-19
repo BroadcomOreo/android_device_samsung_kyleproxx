@@ -51,9 +51,6 @@ TARGET_KERNEL_SOURCE                        := kernel/samsung/kyleproxx
 KERNEL_TOOLCHAIN                            := $(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7/bin
 KERNEL_TOOLCHAIN_PREFIX                     := arm-eabi-
 
-# Releasetools
-TARGET_RELEASETOOLS_EXTENSIONS              := device/samsung/kyleproxx/releasetools
-
 # Extended filesystem support
 TARGET_KERNEL_HAVE_EXFAT                    := true
 TARGET_KERNEL_HAVE_NTFS                     := true
@@ -132,8 +129,6 @@ BOARD_HAL_STATIC_LIBRARIES                  := libhealthd.hawaii
 
 # RIL
 BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx/ril/
-BOARD_PROVIDES_LIBRIL                       := true
-BOARD_PROVIDES_RILD                         := true
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
