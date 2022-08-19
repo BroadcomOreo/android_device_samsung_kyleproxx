@@ -117,7 +117,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl.legacy \
     camera.device@3.2-impl \
-    camera.device@1.0-impl.legacy
+    camera.device@1.0-impl.legacy \
+    libion
+    
 # HIDL
 PRODUCT_COPY_FILES += \
     device/samsung/kyleproxx/manifest.xml:system/vendor/manifest.xml
