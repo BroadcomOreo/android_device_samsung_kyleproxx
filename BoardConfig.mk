@@ -97,6 +97,7 @@ WIFI_BAND                                   := 802_11_ABG
 
 # LightHAL
 TARGET_PROVIDES_LIBLIGHT                    := true
+TARGET_USES_64_BIT_BINDER                   := true
 
 # Resolution
 TARGET_SCREEN_HEIGHT                        := 800
