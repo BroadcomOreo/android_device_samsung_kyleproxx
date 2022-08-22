@@ -97,6 +97,8 @@ WIFI_BAND                                   := 802_11_ABG
 
 # LightHAL
 TARGET_PROVIDES_LIBLIGHT                    := true
+
+# Use 64 Bit binder
 TARGET_USES_64_BIT_BINDER                   := true
 
 # Resolution
@@ -104,22 +106,31 @@ TARGET_SCREEN_HEIGHT                        := 800
 TARGET_SCREEN_WIDTH                         := 480
 
 # Hardware rendering
+USE_OPENGL_RENDERER                         := true
+BOARD_FORCE_SCREENSHOT_CPU_PATH             := true
 BOARD_EGL_WORKAROUND_BUG_10194508           := true
 TARGET_USES_ION                             := true
 BOARD_GLOBAL_CFLAGS                         += -DNEEDS_VECTORIMPL_SYMBOLS -DHAWAII_HWC -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL -DDISABLE_ASHMEM_TRACKING
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK       := true
 TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS       := true
-
-# External apps on SD
-TARGET_EXTERNAL_APPS                        := sdcard1
+TARGET_REQUIRES_SYNCHRONOUS_SETSURFACE      := true
 
 # OpenGL
 BOARD_USES_HWCOMPOSER                       := true
 BOARD_USE_BGRA_8888                         := true
 
+# new google video codecs for low end devices
+DEVICE_ENABLE_LOV                           := true
+
+# Skip API checks.
+WITHOUT_CHECK_API                           := true
+
 # BootAnimation
 TARGET_BOOTANIMATION_PRELOAD                := true
 TARGET_BOOTANIMATION_TEXTURE_CACHE          := true
+
+# Disable tcache
+MALLOC_SVELTE                               := true
 
 # Charger
 BOARD_CHARGING_MODE_BOOTING_LPM             := /sys/class/power_supply/battery/batt_lp_charging
@@ -134,10 +145,11 @@ BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
 TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES  := true
-TARGET_USES_MEDIA_EXTENSIONS := true
+TARGET_USES_MEDIA_EXTENSIONS                := true
+TARGET_USE_AVC_BASELINE_PROFILE             := true
 
 # ADB
-TARGET_USES_LEGACY_ADB_INTERFACE := true
+TARGET_USES_LEGACY_ADB_INTERFACE            := true
 
 # Some of our vendor libs have text relocations
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS      := true
