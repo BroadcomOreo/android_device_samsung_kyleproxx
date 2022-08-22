@@ -149,12 +149,13 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.memtrack</name>
-        <transport arch="32">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>1.0</version>
         <interface>
             <name>IMemtrack</name>
             <instance>default</instance>
         </interface>
+        <fqname>@1.0::IMemtrack/default</fqname>
     </hal>
      <hal format="hidl">
         <name>android.hardware.usb</name>
