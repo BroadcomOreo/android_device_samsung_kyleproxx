@@ -113,7 +113,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     snap \
     android.hardware.camera.provider@2.4-impl.legacy \
-    camera.device@3.2-impl \
     camera.device@1.0-impl.legacy \
     libion
     
