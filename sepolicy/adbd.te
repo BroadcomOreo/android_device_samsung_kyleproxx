@@ -1,2 +1,3 @@
 #============= adbd ==============
 allow adbd device:chr_file read;
+allow adbd device:chr_file { open write };
