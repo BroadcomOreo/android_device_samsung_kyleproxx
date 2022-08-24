@@ -60,7 +60,8 @@ PRODUCT_PACKAGES += \
     lights.hawaii \
     power.hawaii \
     libstagefrighthw \
-    healthd.hawaii
+    healthd.hawaii \
+    webview
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
