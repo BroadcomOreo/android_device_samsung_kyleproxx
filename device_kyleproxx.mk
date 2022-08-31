@@ -21,7 +21,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video_le.xml
+    frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:system/etc/media_codecs_google_video_le.xml
 
 # Configs
 PRODUCT_COPY_FILES += \
@@ -43,7 +43,6 @@ PRODUCT_PACKAGES += \
 
 # GPS/RIL
 PRODUCT_PACKAGES += \
-    libstlport \
     libglgps-compat
 
 # USB accessory
@@ -88,8 +87,8 @@ PRODUCT_PACKAGES += \
 # Missing Symbols
 PRODUCT_PACKAGES += \
     libsamsung_symbols \
-	libatomicshim \
-	libcamerashim
+    libatomicshim \
+    ibcamerashim
 
 # KSM
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -113,7 +112,6 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     Snap \
-    libstlport \
     android.hardware.camera.provider@2.4-impl.legacy \
     camera.device@1.0-impl.legacy \
     libion
