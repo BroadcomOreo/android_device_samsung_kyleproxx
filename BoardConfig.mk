@@ -124,8 +124,11 @@ BOARD_CHARGER_ENABLE_SUSPEND                := true
 # libhealthd
 BOARD_HAL_STATIC_LIBRARIES                  := libhealthd.hawaii
 
+# XML Audio Conf
+USE_XML_AUDIO_POLICY_CONF                   := 1
+
 # RIL
-BOARD_RIL_CLASS                             := ../../../device/samsung/kyleproxx/ril/
+#BOARD_RIL_CLASS                            := ../../../device/samsung/kyleproxx/ril/
 
 # Camera
 TARGET_HAS_LEGACY_CAMERA_HAL1               := true
