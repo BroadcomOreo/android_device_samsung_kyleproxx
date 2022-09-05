@@ -51,9 +51,11 @@ public class SamsungBCMRIL extends RIL implements CommandsInterface {
         mQANElements = 6;
     }
 
-    public void
-    dial(String address, int clirMode, UUSInfo uusInfo, Message result) {
-        RILRequest rr = obtainRequest(RIL_REQUEST_DIAL, result);
+    public void dial(String address, int clirMode, UUSInfo uusInfo, Message result) {
+        IRadio radioProxy = getRadioProxy(result);
+        if (radioProxy != null) {
+            RILRequest rr = obtainRequest(RIL_REQUEST_DIAL, result,
+                    mRILDefaultWorkSource);
 
             Dial dialInfo = new Dial();
             dialInfo.address = convertNullToEmptyString(address);
