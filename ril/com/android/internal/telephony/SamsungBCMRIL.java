@@ -53,24 +53,25 @@ public class SamsungBCMRIL extends RIL implements CommandsInterface {
 
     public void
     dial(String address, int clirMode, UUSInfo uusInfo, Message result) {
-        RILRequest rr = RILRequest.obtain(RIL_REQUEST_DIAL, result);
+        RILRequest rr = obtainRequest(RIL_REQUEST_DIAL, result);
 
-        rr.mParcel.writeString(address);
-        rr.mParcel.writeInt(clirMode);
-        rr.mParcel.writeInt(0); // UUS information is absent: Samsung BCM compat
+            Dial dialInfo = new Dial();
+            dialInfo.address = convertNullToEmptyString(address);
+            dialInfo.clir = clirMode;
+//  Testing and try to update to match oreo       rr.mParcel.writeInt(0); // UUS information is absent: Samsung BCM compat
 
-        if (uusInfo == null) {
-            rr.mParcel.writeInt(0); // UUS information is absent
-        } else {
-            rr.mParcel.writeInt(1); // UUS information is present
-            rr.mParcel.writeInt(uusInfo.getType());
-            rr.mParcel.writeInt(uusInfo.getDcs());
-            rr.mParcel.writeByteArray(uusInfo.getUserData());
+            if (uusInfo != null) {
+                UusInfo info = new UusInfo();
+                info.uusType = uusInfo.getType();
+                info.uusDcs = uusInfo.getDcs();
+                info.uusData = new String(uusInfo.getUserData());
+                dialInfo.uusInfo.add(info);
         }
 
-        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
-
-        send(rr);
+            if (RILJ_LOGD) {
+                // Do not log function arg for privacy
+                riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+            }
     }
 
     public void setUiccSubscription(int slotId, int appIndex, int subId,
@@ -100,7 +101,7 @@ public class SamsungBCMRIL extends RIL implements CommandsInterface {
 
     @Override
     public void setDataAllowed(boolean allowed, Message result) {
-        int simId = mInstanceId == null ? 0 : mInstanceId;
+        int simId = mPhoneId == null ? 0 : mPhoneId;
         if (!allowed) {
             // Deactivate data call. This happens when switching data SIM
             // and the framework will wait for data call to be deactivated.
@@ -125,7 +126,7 @@ public class SamsungBCMRIL extends RIL implements CommandsInterface {
     protected void notifyRegistrantsRilConnectionChanged(int rilVer) {
         super.notifyRegistrantsRilConnectionChanged(rilVer);
         if (rilVer != -1) {
-            if (mInstanceId != null) {
+            if (mPhoneId != null) {
                 // Enable simultaneous data/voice on Multi-SIM
                 invokeOemRilRequestBrcm((byte) 3, (byte) 1, null);
             } else {
@@ -139,20 +140,32 @@ public class SamsungBCMRIL extends RIL implements CommandsInterface {
         invokeOemRilRequestRaw(new byte[] { 'B', 'R', 'C', 'M', key, value }, response);
     }
 
-    protected RILRequest
-    processSolicited (Parcel p) {
-        int serial, error;
+protected RILRequest processResponse(RadioResponseInfo responseInfo) {
+        int serial = responseInfo.serial;
+        int error = responseInfo.error;
+        int type = responseInfo.type;
 
-        serial = p.readInt();
-        error = p.readInt();
+        RILRequest rr = null;
 
-        RILRequest rr;
+        if (type == RadioResponseType.SOLICITED_ACK) {
+            synchronized (mRequestList) {
+                rr = mRequestList.get(serial);
+            }
+            if (rr == null) {
+                Rlog.w(RILJ_LOG_TAG, "Unexpected solicited ack response! sn: " + serial);
+            } else {
+                decrementWakeLock(rr);
+                if (RILJ_LOGD) {
+                    riljLog(rr.serialString() + " Ack < " + requestToString(rr.mRequest));
+                }
+            }
+            return rr;
+        }
 
         rr = findAndRemoveRequestFromList(serial);
-
         if (rr == null) {
-            Rlog.w(RILJ_LOG_TAG, "Unexpected solicited response! sn: "
-                            + serial + " error: " + error);
+            Rlog.e(RIL.RILJ_LOG_TAG, "processResponse: Unexpected response! serial: " + serial
+                    + " error: " + error);
             return null;
         }
 
